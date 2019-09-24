@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 
 import { httpClient } from '../../HttpClient/HttpClient'
 import Carousel from 'react-native-snap-carousel';
+import {colors} from '../../config/colors'
 
 import { connect } from 'react-redux'
 
@@ -108,7 +109,7 @@ const styles= StyleSheet.create({
         fontWeight:'600'
     }, 
     textRight:{
-        color:'orange',
+        color: colors.orange,
         fontWeight:'300',
         fontSize:15
     },

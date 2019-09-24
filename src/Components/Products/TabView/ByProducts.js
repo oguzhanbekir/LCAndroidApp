@@ -18,7 +18,6 @@ class ByProducts extends React.Component {
                 data: res.data.result
                 });  
         })
-
     }
 
     FlatListItemSeparator = () => {
@@ -26,10 +25,9 @@ class ByProducts extends React.Component {
           //Item Separator
           <View style={{height: 0.5, width: '100%', backgroundColor: '#C8C8C8'}}/>
         );
-      };
+    };
     
 render() {
-   
         return (
             <View style={styles.container}>
                <SafeAreaView style={styles.container}>

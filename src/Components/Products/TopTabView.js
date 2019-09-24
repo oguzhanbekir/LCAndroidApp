@@ -27,7 +27,6 @@ const ThirdRoute = () => (
       ],
     };
     
-   
     render() {
       return (
         <TabView

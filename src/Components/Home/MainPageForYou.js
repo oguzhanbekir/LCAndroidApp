@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image,TouchableOpacity,FlatList } from 'react-n
 
 import { httpClient } from '../../HttpClient/HttpClient'
 import { Card } from "react-native-elements"
+import {colors} from '../../config/colors'
 
 import { connect } from 'react-redux'
 
@@ -88,7 +89,7 @@ const styles= StyleSheet.create({
         fontWeight:'600'
     }, 
     textRight:{
-        color:'orange',
+        color:colors.orange,
         fontWeight:'300',
         fontSize:15
     }
