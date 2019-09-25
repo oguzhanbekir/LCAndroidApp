@@ -18,7 +18,6 @@ class Campaigns extends React.Component {
                 data: res.data.result
                  });
             }); 
-
     }
 
     FlatListItemSeparator = () => {
@@ -29,7 +28,6 @@ class Campaigns extends React.Component {
       };
     
 render() {
-   
         return (
             <View style={styles.container}>
                <SafeAreaView style={styles.container}>
