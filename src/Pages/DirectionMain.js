@@ -47,13 +47,13 @@ class DirectionMain extends React.Component {
                     </Swiper>
                 </View>
                 <TouchableOpacity
-                    style= {styles.buttonLogin}
+                    style= {styles.buttonRegister}
                     onPress= {() => this.props.navigation.navigate('Register')}
                 >
                     <Text style={styles.buttonRegisterText}>Kayıt Ol</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style= {styles.buttonRegister}
+                    style= {styles.buttonLogin}
                     onPress= {() => this.props.navigation.navigate('Login')}
                 >
                     <Text style={styles.buttonLoginText}>Giriş Yap</Text>
@@ -77,25 +77,25 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         paddingHorizontal: 30,
-        backgroundColor: colors.directionMainBackground
+        backgroundColor: colors.background
     },
     buttonLogin: {
         alignItems: 'center',
-        backgroundColor: colors.directionMainButtonLogin,
+        backgroundColor: colors.buttonLogin,
         paddingVertical:10,
         marginVertical: 5,
         borderRadius: 5,
         elevation: 2,
-        borderColor: colors.directionMainButtonBorder,
+        borderColor: colors.buttonBorder,
     },
     buttonRegister: {
         alignItems: 'center',
-        backgroundColor: colors.directionMainButtonRegister,
+        backgroundColor: colors.buttonRegister,
         paddingVertical:10,
         marginVertical: 5,
         borderRadius: 5,
         elevation: 2,
-        borderColor: colors.directionMainButtonBorder
+        borderColor: colors.buttonBorder
     },
     buttonSkip: {
         alignItems: 'center',

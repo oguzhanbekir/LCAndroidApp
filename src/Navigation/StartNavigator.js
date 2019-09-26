@@ -29,6 +29,7 @@ authService  = () => {
     }
     })
     .then(function (response) {
+        storeToken(response.data.access_token)
         defaultLogin()
     })
     .catch(function (error) {

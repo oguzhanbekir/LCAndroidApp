@@ -7,8 +7,13 @@ export const colors = {
     showMyLocationIcon:'#404040',
     orange:'#f68529',
 
-    directionMainBackground:'#FFF',
-    directionMainButtonLogin:'orange',
-    directionMainButtonRegister:'#FFF',
-    directionMainButtonBorder:'#000'
+
+    //Direction Page Button Color
+    background:'#FFF',
+    buttonLogin:'#FFF',
+    buttonRegister:'orange',
+    buttonBorder:'#000',
+
+    //Login Page
+    buttonFB: '#4267B2'
 };

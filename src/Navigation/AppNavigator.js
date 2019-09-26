@@ -26,8 +26,6 @@ const headerStyleProducts = 'ÜRÜNLER'
 const headerStyleBasket = 'SEPETİM'
 const headerStylePaymentType = 'TESLİMAT TİPİ'
 
-const headerSkip = <Text style={{paddingRight:10}}>{headerStyleSkip}</Text>
-
 const HomeTab = createStackNavigator({
   Home: {
     screen: Home,
@@ -198,7 +196,7 @@ Login: {
     return {
       headerTitle:headerStyleLogin,
       headerRight: (
-          headerSkip
+        <Text onPress= {() => navigation.navigate('Home')} style={{paddingRight:10}}>{headerStyleSkip}</Text>
         ),
     }
   }, 
@@ -209,7 +207,7 @@ Register: {
     return {
       headerTitle:headerStyleRegister,
       headerRight: (
-          headerSkip
+        <Text onPress= {() => navigation.navigate('Home')} style={{paddingRight:10}}>{headerStyleSkip}</Text>
         ),
     }
   }, 

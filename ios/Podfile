@@ -32,6 +32,8 @@ target 'LCPizza' do
 
 
 
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
   target 'LCPizzaTests' do
     inherit! :search_paths
     # Pods for testing
