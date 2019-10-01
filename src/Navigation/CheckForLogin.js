@@ -1,9 +1,31 @@
-import React, { Component } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import React from 'react';
+import {connect} from 'react-redux';
+class CheckForLogin extends React.Component {
+  componentDidMount(){
+    const authloggedIn = this.props.loggedIn;
+    const name = this.props.name;
 
-export const CheckForLogin = ({navigation}) => {
-    const  token = AsyncStorage.getItem('token');
-    return navigation.navigate(token ? 'Auth' : 'Home');
+   this.props.navigation.navigate(authloggedIn ? 'Home' : 'Auth');
+   if(authloggedIn){
+     this.props.navigation.navigate('Home',{
+       title: "Hoşgeldin " + name.split(" ")[0],
+     })
+   }
+  }
+
+  render() {
+    return null
+  }
 }
 
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.authReducer.loggedIn,
+    name: state.authReducer.name,
 
+  };
+};
+
+export default connect(
+    mapStateToProps
+)(CheckForLogin);

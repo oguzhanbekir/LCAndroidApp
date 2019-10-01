@@ -1,10 +1,14 @@
-const indicator = (state={durum:'false'},action)=>{
-    switch(action.type){
-        case 'LOAD_HOME':
-              return {...state, durum:'true'};
+const indicator = (state = {isLoading: true}, action) => {
+  switch (action.type) {
+    case 'LOAD_HOME':
+      return {...state, isLoading: false};
+      break;
+    case "HIDE_LOADER":
+      return {...state, isLoading: false};
+      break;
+    default:
+      return state;
+  }
+};
 
-    }
-    return state
-}
-
-export default indicator
+export default indicator;
