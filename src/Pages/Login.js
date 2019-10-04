@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
+  BackHandler,
 } from 'react-native';
 
 import {colors} from '../config/colors';
@@ -16,8 +17,10 @@ import Indicator from '../Components/Indicator';
 import CustomInputForm from '../Components/Register/CustomInputForm';
 import {connect} from 'react-redux';
 import { HeaderBackButton } from 'react-navigation-stack';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 class Login extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,6 +39,7 @@ class Login extends React.Component {
   }
 
   login = () => {
+
     const {email, password} = this.state;
     if (email == '') {
       this.setState({errorMessageEmail: 'Lütfen bu alanı doldur'});
@@ -65,6 +69,7 @@ class Login extends React.Component {
               //kişinin bilgileri tutulacak
               this.props.isLoggedIn(res.data.result.name);
              // alert(res.data.result.name)
+
               this.props.navigation.navigate('Check')
             } else {
               Alert.alert('', res.data.message, [{text: 'OK'}], {
@@ -86,16 +91,30 @@ class Login extends React.Component {
     })
   };
 
-  static navigationOptions = ({ navigation }) => {
-    console.log(navigation.state.index)
-    const control = JSON.stringify(navigation.getParam('backHome'))
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+  }
 
-    return{
-      headerLeft:(<HeaderBackButton
-          onPress={()=>{ control == '\"yeap\"' ? navigation.navigate('Home') : navigation.navigate('DirectionMain')}
-          }/>)
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    const nextScreen = this.props.navigation.state.params || {};
+    if(nextScreen.backHome === 'Home'){
+      return this.props.navigation.navigate("Home")
     }
   }
+
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+    return{
+      headerLeft:(<HeaderBackButton
+          onPress={()=>{ params.backHome === 'Home' ? navigation.navigate('Home'): navigation.navigate('DirectionMain')}}
+      />)
+    }
+  }
+
   render() {
    if(this.state.indicator) {
      return (
@@ -171,7 +190,9 @@ class Login extends React.Component {
            <View style={styles.footer}>
              <Text style={styles.footerText}>Hesabın yok mu? </Text>
              <TouchableOpacity
-                 onPress={() => this.props.navigation.navigate('Register')}>
+                 onPress={() => {
+                   this.props.navigation.navigate('Register', { backLogin: 'Login' } )
+                 }}>
                <Text style={styles.footerTextLink}>HEMEN KAYIT OL</Text>
              </TouchableOpacity>
            </View>
@@ -183,9 +204,9 @@ class Login extends React.Component {
            <Indicator />
          </View>
      )
-
    }
   }
+
 }
 const styles = StyleSheet.create({
   container: {
@@ -260,12 +281,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-        isLoading: state.indicator.isLoading,
-        backToLogin: state.LoginBack.backHome,
+      //  isLoading: state.indicator.isLoading,
+      //  backToLogin: state.LoginBack.backHome,
   };
 };
 
-const mapDispatchToprops = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
     isLoggedIn: (username) => dispatch({type: 'LOGGED_IN', payload:username}),
   };
@@ -273,5 +294,5 @@ const mapDispatchToprops = dispatch => {
 
 export default connect(
     mapStateToProps,
-    mapDispatchToprops,
+    mapDispatchToProps,
 )(Login);

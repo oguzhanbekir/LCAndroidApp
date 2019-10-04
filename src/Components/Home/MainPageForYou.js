@@ -38,10 +38,7 @@ class MainPageForYou extends React.Component {
   render() {
     return (
       <View style={styles.subTopContainer}>
-        <TouchableOpacity onPress={()=> { this.props.isLoading() }}><Text>Redux</Text></TouchableOpacity>
-        <TouchableOpacity onPress={()=> { this.props.isLoading2(), this.props.navigation.navigate("Check") }}><Text>Persist</Text></TouchableOpacity>
-        <Text>{this.props.durum}+asd</Text>
-        <Text>{this.props.durum2}+asd</Text>
+        <TouchableOpacity onPress={()=> { this.props.isLoading(), this.props.navigation.navigate("Check") }}><Text>Persist</Text></TouchableOpacity>
         <View style={styles.container}>
           <Text style={styles.textLeft}>Senin İçin Seçtik</Text>
           <Text style={styles.textRight}>TÜMÜNÜ GÖR</Text>
@@ -110,15 +107,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    durum: state.indicator.durum,
-    durum2: state.authReducer.loggedIn,
+    durum2: state.AuthReducer.loggedIn,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    isLoading: () => dispatch({type: 'LOAD_HOME'}),
-    isLoading2: () => dispatch({type: 'LOGGED_OUT'}),
+    isLoading: () => dispatch({type: 'LOGGED_OUT'}),
   };
 };
 

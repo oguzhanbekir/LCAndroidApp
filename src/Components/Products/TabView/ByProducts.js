@@ -6,9 +6,12 @@ import {
   FlatList,
   SafeAreaView,
   Image,
+  Button,
 } from 'react-native';
 
 import {httpClient} from '../../../HttpClient/HttpClient';
+import Indicator from '../../Indicator';
+import {HeaderBackButton} from 'react-navigation-stack';
 
 class ByProducts extends React.Component {
   state = {data: []};
@@ -33,39 +36,44 @@ class ByProducts extends React.Component {
     );
   };
 
+  _renderItem = ({item}) => {
+   return(
+       <View style={styles.item}>
+         <View
+             style={{
+               flex: 1,
+               flexDirection: 'row',
+               alignItems: 'center',
+             }}>
+           <Image
+               style={{height: 70, width: 120}}
+               source={{uri: item.image}}
+           />
+           <View style={{paddingLeft: 10, width: 230}}>
+             <Text style={styles.titleName}>{item.name}</Text>
+             <Text style={styles.titlePrice}>
+               {'₺' + item.price.price}
+             </Text>
+           </View>
+         </View>
+         <Text style={styles.titleDetail}>{item.detail}</Text>
+       </View>
+   )
+   }
+
+
   render() {
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.container}>
-          {this.state.data.length > 0 && (
+          {this.state.data.length > 0 ?
             <FlatList
               data={this.state.data}
-              renderItem={({item}) => (
-                <View style={styles.item}>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      style={{height: 70, width: 120}}
-                      source={{uri: item.image}}
-                    />
-                    <View style={{paddingLeft: 10, width: 230}}>
-                      <Text style={styles.titleName}>{item.name}</Text>
-                      <Text style={styles.titlePrice}>
-                        {'₺' + item.price.price}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text style={styles.titleDetail}>{item.detail}</Text>
-                </View>
-              )}
+              renderItem={this._renderItem}
               keyExtractor={item => item.id}
               ItemSeparatorComponent={this.FlatListItemSeparator}
             />
-          )}
+          : <Indicator />}
         </SafeAreaView>
       </View>
     );

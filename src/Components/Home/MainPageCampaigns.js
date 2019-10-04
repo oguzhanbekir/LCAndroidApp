@@ -148,17 +148,17 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    durum: state.authReducer.loggedIn,
+    durum: state.AuthReducer.loggedIn,
   };
 };
 
-const mapDispatchToprops = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
-    degistir: () => dispatch({type: 'LOAD_HOMEE', payload: 'false'}),
+    //degistir: () => dispatch({type: 'LOAD_HOME', payload: 'false'}),
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToprops,
+  mapDispatchToProps,
 )(MainPageForYou);

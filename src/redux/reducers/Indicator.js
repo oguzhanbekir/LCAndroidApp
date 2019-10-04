@@ -1,4 +1,4 @@
-const indicator = (state = {isLoading: true}, action) => {
+const Indicator = (state = {isLoading: true}, action) => {
   switch (action.type) {
     case 'LOAD_HOME':
       return {...state, isLoading: false};
@@ -11,4 +11,4 @@ const indicator = (state = {isLoading: true}, action) => {
   }
 };
 
-export default indicator;
+export default Indicator;

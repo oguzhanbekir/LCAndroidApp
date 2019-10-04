@@ -13,7 +13,7 @@ class CouponCode extends React.Component {
     return (
       <View style={styles.container}>
         <ImageBackground
-          source={require('../../images/hm-coupon-code.png')}
+          source={require('../../Images/hm-coupon-code.png')}
           style={styles.backgroundImage}>
           <View
             style={{

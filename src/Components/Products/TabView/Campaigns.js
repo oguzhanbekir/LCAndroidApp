@@ -9,21 +9,28 @@ import {
 } from 'react-native';
 
 import {httpClient} from '../../../HttpClient/HttpClient';
+import Indicator from '../../Indicator';
+import {connect} from 'react-redux';
 
 class Campaigns extends React.Component {
-  state = {data: []};
+  state = {
+    //data: [],
+    indicator:true,
+  };
+
 
   componentDidMount() {
-    //TabView Kampanyalar
+    this.getData(this.props.filterId)
+  }
+
+  getData = (updateState) => {
     httpClient
-      .post('/web/Product/GetProducts', {
-        CategoryId: '102471991065',
-      })
-      .then(res => {
-        this.setState({
-          data: res.data.result,
-        });
-      });
+        .post('/web/Product/GetProducts', {
+          CategoryId: updateState,
+        })
+        .then(res => {
+          this.props.changeData(res.data.result)
+        })
   }
 
   FlatListItemSeparator = () => {
@@ -33,40 +40,43 @@ class Campaigns extends React.Component {
     );
   };
 
+  _renderItem = ({item}) => {
+   return(
+       <View style={styles.item}>
+         <View
+             style={{
+               flex: 1,
+               flexDirection: 'row',
+               alignItems: 'center',
+             }}>
+           <Image
+               style={{height: 70, width: 120}}
+               source={{uri: item.image}}
+           />
+           <View style={{paddingLeft: 10, width: 230}}>
+             <Text style={styles.titleName}>{item.name}</Text>
+             <Text style={styles.titlePrice}>
+               {'₺' + item.price.price}
+             </Text>
+           </View>
+         </View>
+         <Text style={styles.titleDetail}>{item.detail}</Text>
+       </View>
+   )
+   }
+
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.container}>
-          {this.state.data.length > 0 && (
+          {this.props.data.length > 0 ?
             <FlatList
-              data={this.state.data}
-              renderItem={({item}) => (
-                <View style={styles.item}>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      style={{height: 70, width: 120}}
-                      source={{uri: item.image}}
-                    />
-                    <View style={{paddingLeft: 10, width: 230}}>
-                      <Text style={styles.titleName}>{item.name}</Text>
-                      <Text style={styles.titlePrice}>
-                        {'₺' + item.price.price}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text style={styles.titleDetail}>{item.detail}</Text>
-                </View>
-              )}
+              data={this.props.data}
+              renderItem={this._renderItem}
               keyExtractor={item => item.id}
               ItemSeparatorComponent={this.FlatListItemSeparator}
+              extraData={this.props.data}
             />
-          )}
-        </SafeAreaView>
+          : <Indicator />}
       </View>
     );
   }
@@ -97,4 +107,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Campaigns;
+const mapStateToProps = state => {
+  return {
+    filterId: state.FilterCampaignsIdReducer.id,
+    data:state.FilterCampaignsDataReducer
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    changeData: (data) => (
+        dispatch({type: 'FILTER_CAMPAIGNS_DATA', payload: data})
+    ),
+  };
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(Campaigns);

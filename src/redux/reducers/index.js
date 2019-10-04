@@ -1,32 +1,24 @@
-import { combineReducers} from 'redux';
+import {combineReducers} from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
-import { persistReducer } from 'redux-persist'
-import indicator from './indicator';
-import authReducer from './authReducer';
-import LoginBack from './LoginBack';
+import {persistReducer} from 'redux-persist';
+import Indicator from './Indicator';
+import AuthReducer from './AuthReducer';
+import FilterProductReducer from './FilterProductsReducer';
+import FilterCampaignsIdReducer from './FilterCampaignsIdReducer';
+import FilterCampaignsDataReducer from './FilterCampaignsDataReducer';
 
-const indicatorPersistConfig = {
+const config = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['indicator']
-}
+    whitelist: ['AuthReducer'],
+};
 
-const authPersistConfig = {
-    key: 'auth',
-    storage: AsyncStorage,
-    blacklist: ['authReducer']
-}
-
-const backLoginConfig = {
-    key: 'backLogin',
-    storage: AsyncStorage,
-    whitelist: ['backLoginConfig']
-}
-
-const rootReducer = (combineReducers)({
-    indicator : persistReducer(indicatorPersistConfig, indicator),
-    authReducer : persistReducer(authPersistConfig, authReducer),
-    LoginBack : persistReducer(backLoginConfig, LoginBack),
+const rootReducer = combineReducers({
+    Indicator,
+    AuthReducer,
+    FilterProductReducer,
+    FilterCampaignsIdReducer,
+    FilterCampaignsDataReducer,
 });
 
-export default rootReducer;
+export default persistReducer(config, rootReducer);

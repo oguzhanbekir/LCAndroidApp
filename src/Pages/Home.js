@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    loggedIn: state.authReducer.loggedIn,
+    loggedIn: state.AuthReducer.loggedIn,
   };
 };
 

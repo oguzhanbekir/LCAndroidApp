@@ -107,7 +107,7 @@ class ShowRestaurantsMap extends React.Component {
                     longitude: parseFloat(marker.longitude),
                   }}
                   title={marker.name}
-                  image={require('../../images/ic_marker.png')}
+                  image={require('../../Images/ic_marker.png')}
                   description={
                     _.find(marker.storeWorkingTimes, {dayOfWeek: CURRENT_DAY})
                       .startTime +

@@ -1,10 +1,10 @@
 import {applyMiddleware, createStore} from 'redux';
 import { persistStore } from 'redux-persist'
 import logger from 'redux-logger'
-import  reducer  from '../reducers'
-
+import  rootReducer  from '../reducers/index'
+//,applyMiddleware(logger) for log
 export default () => {
-    let store = createStore(reducer, {},applyMiddleware(logger))
+    let store = createStore(rootReducer)
     let persistor = persistStore(store)
     return { store, persistor }
 }

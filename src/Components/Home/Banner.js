@@ -5,7 +5,9 @@ import {httpClient} from '../../HttpClient/HttpClient';
 import {SliderBox} from 'react-native-image-slider-box';
 
 class Banner extends React.Component {
-  state = {images: []};
+  state = {
+    images: []
+  };
   componentDidMount() {
     //Uygulamanın ana sayfasındaki banner
     const imageUrl = [];

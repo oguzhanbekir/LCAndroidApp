@@ -28,7 +28,7 @@ class DirectionMain extends React.Component {
         <Image
           resizeMode="contain"
           style={{height: 150, width: '100%'}}
-          source={require('../images/lc_directionPage.png')}
+          source={require('../Images/lc_directionPage.png')}
         />
         <View style={styles.wrapper}>
           <Swiper

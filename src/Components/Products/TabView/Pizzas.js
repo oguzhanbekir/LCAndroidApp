@@ -11,17 +11,26 @@ import {
 
 import {httpClient} from '../../../HttpClient/HttpClient';
 import {Icon} from 'react-native-elements';
+import Indicator from '../../Indicator';
 
 class Pizzas extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: [], selectedButton: 'MEDIUM'};
+    this.state = {
+      data: [],
+      selectedButton: 'MEDIUM',
+
+      indicator:true,
+    };
     this.selectionOnPress = this.selectionOnPress.bind(this);
   }
 
   selectionOnPress(buttonType) {
     this.setState({selectedButton: buttonType});
     if (buttonType == 'SMALL') {
+      this.setState({
+        indicator:true,
+      });
       httpClient
         .post('/web/Product/GetProducts', {
           CategoryId: '107270280018',
@@ -30,9 +39,13 @@ class Pizzas extends React.Component {
         .then(res => {
           this.setState({
             data: res.data.result,
+            indicator:false,
           });
         });
     } else if (buttonType == 'MEDIUM') {
+      this.setState({
+        indicator:true,
+      });
       httpClient
         .post('/web/Product/GetProducts', {
           CategoryId: '107270280018',
@@ -41,9 +54,13 @@ class Pizzas extends React.Component {
         .then(res => {
           this.setState({
             data: res.data.result,
+            indicator:false,
           });
         });
     } else if (buttonType == 'LARGE') {
+      this.setState({
+        indicator:true,
+      });
       httpClient
         .post('/web/Product/GetProducts', {
           CategoryId: '107270280018',
@@ -52,6 +69,7 @@ class Pizzas extends React.Component {
         .then(res => {
           this.setState({
             data: res.data.result,
+            indicator:false,
           });
         });
     }
@@ -59,6 +77,9 @@ class Pizzas extends React.Component {
 
   componentDidMount() {
     //TabView Pizzalar
+    this.setState({
+      indicator:true,
+    });
     httpClient
       .post('/web/Product/GetProducts', {
         CategoryId: '107270280018',
@@ -67,6 +88,7 @@ class Pizzas extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.result,
+          indicator:false,
         });
       });
   }
@@ -78,11 +100,34 @@ class Pizzas extends React.Component {
     );
   };
 
+  _renderItem = ({item}) => {
+     return(
+         <View style={styles.item}>
+           <View
+               style={{
+                 flex: 1,
+                 flexDirection: 'row',
+                 alignItems: 'center',
+               }}>
+             <Image
+                 style={{height: 70, width: 120}}
+                 source={{uri: item.image}}
+             />
+             <View style={{paddingLeft: 10, width: 230}}>
+               <Text style={styles.titleName}>{item.name}</Text>
+               <Text style={styles.titlePrice}>
+                 {'₺' + item.price.price}
+               </Text>
+             </View>
+           </View>
+           <Text style={styles.titleDetail}>{item.detail}</Text>
+         </View>
+     )
+   }
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.container}>
-          {this.state.data.length > 0 && (
+
             <Fragment>
               <View
                 style={{
@@ -91,6 +136,7 @@ class Pizzas extends React.Component {
                   padding: 5,
                 }}>
                 <TouchableOpacity
+                  disabled={ this.state.selectedButton === 'SMALL' ? true : false}
                   style={
                     this.state.selectedButton === 'SMALL'
                       ? styles.buttonPress
@@ -111,11 +157,11 @@ class Pizzas extends React.Component {
                         ? styles.buttonPressText
                         : styles.buttonText
                     }>
-                    {' '}
-                    Küçük
+                    {'  Küçük'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  disabled={ this.state.selectedButton === 'MEDIUM' ? true : false}
                   style={
                     this.state.selectedButton === 'MEDIUM'
                       ? styles.buttonPress
@@ -136,11 +182,11 @@ class Pizzas extends React.Component {
                         ? styles.buttonPressText
                         : styles.buttonText
                     }>
-                    {' '}
-                    Orta
+                    {'  Orta'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  disabled={ this.state.selectedButton === 'LARGE' ? true : false}
                   style={
                     this.state.selectedButton === 'LARGE'
                       ? styles.buttonPress
@@ -161,41 +207,19 @@ class Pizzas extends React.Component {
                         ? styles.buttonPressText
                         : styles.buttonText
                     }>
-                    {' '}
-                    Büyük
+                    {'  Büyük'}
                   </Text>
                 </TouchableOpacity>
               </View>
+              {!this.state.indicator ?
               <FlatList
                 data={this.state.data}
-                renderItem={({item}) => (
-                  <View style={styles.item}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
-                      <Image
-                        style={{height: 70, width: 120}}
-                        source={{uri: item.image}}
-                      />
-                      <View style={{paddingLeft: 10, width: 230}}>
-                        <Text style={styles.titleName}>{item.name}</Text>
-                        <Text style={styles.titlePrice}>
-                          {'₺' + item.price.price}
-                        </Text>
-                      </View>
-                    </View>
-                    <Text style={styles.titleDetail}>{item.detail}</Text>
-                  </View>
-                )}
+                renderItem={this._renderItem}
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={this.FlatListItemSeparator}
-              />
+              /> :  <Indicator /> }
             </Fragment>
-          )}
-        </SafeAreaView>
+
       </View>
     );
   }

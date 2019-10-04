@@ -7,12 +7,14 @@ import {
   ScrollView,
   Switch,
   Alert,
+  BackHandler,
 } from 'react-native';
 
 import {Icon} from 'react-native-elements';
 import {colors} from '../config/colors';
 import {httpClient} from '../HttpClient/HttpClient';
 import CustomInputForm from '../Components/Register/CustomInputForm';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 class Register extends React.Component {
   state = {
@@ -33,7 +35,23 @@ class Register extends React.Component {
     switchValueSMS: false,
     switchValueEmail: false,
   };
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    const nextScreen = this.props.navigation.state.params || {};
+    if(nextScreen.backLogin === 'Login'){
+      return this.props.navigation.navigate("Login")
+    }
+  }
+
   controlRegisterForm = () => {
+
     const {username, email, password, phone} = this.state;
     if (username == '') {
       this.setState({errorMessageUserName: 'Lütfen bu alanı doldur'});
@@ -68,6 +86,10 @@ class Register extends React.Component {
             } else {
               console.log(this.state.username+" "+this.state.email+" "+this.state.password+" "+this.state.phone+" "+
                   this.state.switchValueAgreement+" "+this.state.switchValueEmail+" "+this.state.switchValueSMS)
+              showMessage({
+                message: "Simple message",
+                type: "info",
+              });
             }
           }
         }

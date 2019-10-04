@@ -207,8 +207,8 @@ const AuthNavigator = createStackNavigator(
       screen: Login,
       navigationOptions: ({navigation}) => {
         return {
-          headerTitle: headerStyleLogin,
-          headerRight: (
+            headerTitle: headerStyleLogin,
+            headerRight: (
             <Text
               onPress={() => navigation.navigate('Home')}
               style={{paddingRight: 10}}>
@@ -258,7 +258,7 @@ const SwitchNavigator = createSwitchNavigator(
   },
   {
     defaultNavigationOptions: {
-      initialRouteName: 'Home',
+      initialRouteName: 'Check',
       headerMode: 'none',
     },
   },
@@ -269,10 +269,17 @@ const mapStateToProps = state => {
 
  // alert(this.state.loggedIn)
   return {
-    loggedIn: state.authReducer.loggedIn,
+    loggedIn: state.AuthReducer.loggedIn,
   };
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+
+    };
+};
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(createAppContainer(SwitchNavigator));
