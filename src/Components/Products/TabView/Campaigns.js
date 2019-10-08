@@ -13,12 +13,6 @@ import Indicator from '../../Indicator';
 import {connect} from 'react-redux';
 
 class Campaigns extends React.Component {
-  state = {
-    //data: [],
-    indicator:true,
-  };
-
-
   componentDidMount() {
     this.getData(this.props.filterId)
   }
@@ -56,14 +50,14 @@ class Campaigns extends React.Component {
            <View style={{paddingLeft: 10, width: 230}}>
              <Text style={styles.titleName}>{item.name}</Text>
              <Text style={styles.titlePrice}>
-               {'₺' + item.price.price}
+               {'₺' + item.price.price.toFixed(2)}
              </Text>
            </View>
          </View>
          <Text style={styles.titleDetail}>{item.detail}</Text>
        </View>
    )
-   }
+   };
 
   render() {
     return (

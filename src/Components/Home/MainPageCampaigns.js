@@ -31,8 +31,8 @@ class MainPageForYou extends React.Component {
     console.log(this.state.currentIndex);
   };
 
-  getIndex(currenIndex) {
-    return arr.findIndex(obj => obj.currenIndex === currenIndex);
+  getIndex(currentIndex) {
+    return arr.findIndex(obj => obj.currentIndex === currentIndex);
   }
 
   _renderItem({item, index}) {

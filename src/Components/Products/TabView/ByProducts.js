@@ -52,7 +52,7 @@ class ByProducts extends React.Component {
            <View style={{paddingLeft: 10, width: 230}}>
              <Text style={styles.titleName}>{item.name}</Text>
              <Text style={styles.titlePrice}>
-               {'₺' + item.price.price}
+               {'₺' + item.price.price.toFixed(2)}
              </Text>
            </View>
          </View>

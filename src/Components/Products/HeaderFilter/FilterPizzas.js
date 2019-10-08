@@ -4,9 +4,11 @@ import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 import {httpClient} from '../../../HttpClient/HttpClient';
 import Indicator from '../../Indicator';
 import {colors} from '../../../config/colors';
+import {connect} from 'react-redux';
 
 class PizzasFilter extends React.Component {
     state = {pizzasData: []};
+
     componentDidMount() {
         httpClient.get('/web/Product/GetDepartments').then(res => {
             res.data.result.map(data => {
@@ -18,12 +20,13 @@ class PizzasFilter extends React.Component {
                             orderIndex: -1,
                         }].sort(function (a, b) {
                             return parseInt(a.orderIndex) - parseInt(b.orderIndex);
-                        })
+                        }),
                     });
                 }
             });
         });
     }
+
     FlatListItemSeparator = () => {
         return (
             //Item Separator
@@ -46,14 +49,27 @@ class PizzasFilter extends React.Component {
             </View>
         );
     };
+
     selectionOnPressFilter(id) {
-         alert(id)
-      /*  this.props.changeFilterId(id)
-        this.getData(id)
-        this.props.navigation.close();*/
+        this.props.changeFilterId(id);
+        this.getData(id, this.props.sizeId);
+        this.props.navigation.close();
     }
+
+    getData = (categoryId, sizeId) => {
+        console.log(categoryId+"  "+sizeId)
+        this.props.changeDataDelete();
+        httpClient
+            .post('/web/Product/GetProducts', {
+                CategoryId: categoryId,
+                Size: sizeId,
+            })
+            .then(res => {
+                this.props.changeData(res.data.result, sizeId);
+            });
+    };
+
     render() {
-        console.log(this.state.pizzasData)
         return (
             <Fragment>
                 {this.state.pizzasData.length > 0 ?
@@ -102,4 +118,28 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PizzasFilter;
+const mapStateToProps = state => {
+    return {
+        filterId: state.FilterPizzasIdReducer.id,
+        sizeId: state.FilterPizzasDataReducer.size,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        changeFilterId: (id) => (
+            dispatch({type: 'FILTER_PIZZAS', payload: id})
+        ),
+        changeData: (data, sizeId) => (
+            dispatch({type: 'FILTER_PIZZAS_DATA', payload: data, pizzaSize:sizeId})
+        ),
+        changeDataDelete: () => (
+            dispatch({type: 'FILTER_PIZZAS_DATA_DELETE'})
+        ),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(PizzasFilter);

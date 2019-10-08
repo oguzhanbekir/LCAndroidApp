@@ -55,11 +55,21 @@ let storeToken = key => {
 };
 
 
+
 class StartNavigator extends React.Component {
   constructor(props) {
     super(props);
-    getData();
+    if(!this.props.loggedIn)
+      getData();
+    if(!this.props.existingId)
+      this.getBasket();
   }
+  getBasket = () => {
+    httpClient.get('/web/Basket/GetBasket').then(res => {
+      this.props.storeExistingId(res.data.result.id)
+      alert(res.data.result.id);
+    });
+  };
     _getCurrentRouteName(navState) {
       //console.log(navState)
         if (navState.hasOwnProperty('index')) {
@@ -72,9 +82,9 @@ class StartNavigator extends React.Component {
     return (
       <View style={styles.container}>
         <AppNavigator screenProps={this.props}
-                      onNavigationStateChange={(prevState, newState) => {
+                      /*onNavigationStateChange={(prevState, newState) => {
                           this._getCurrentRouteName(newState)
-                      }}/>
+                      }}*//>
         <FlashMessage autoHide={false} position="top" />
       </View>
     );
@@ -92,12 +102,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     loggedIn: state.AuthReducer.loggedIn,
+    existingId: state.GetBasketReducer.id,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-
+    storeExistingId: (id) => (
+        dispatch({type: 'EXISTING_ID', payload: id})
+    ),
   };
 };
 

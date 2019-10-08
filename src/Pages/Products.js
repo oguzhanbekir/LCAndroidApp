@@ -61,7 +61,7 @@ class Products extends React.Component {
             }}
         >
           {this.props.swipeIndex == "0" ?
-              <FilterCampaigns navigation={this.RBSheet} /> : <FilterPizzas />
+              <FilterCampaigns navigation={this.RBSheet} /> : <FilterPizzas navigation={this.RBSheet}/>
           }
         </RBSheet>
       </View>

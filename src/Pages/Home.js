@@ -7,6 +7,8 @@ import MainPageCampaigns from '../Components/Home/MainPageCampaigns';
 import CouponCode from '../Components/Home/CouponCode';
 import LoginButton from '../Components/Home/LoginButton';
 import NearestRestaurantButton from '../Components/Home/NearestRestaurant';
+import MemberDeliveryAddress from '../Components/Home/MemberDeliveryAddress';
+
 import Indicator from '../Components/Indicator';
 
 import {connect} from 'react-redux';
@@ -15,7 +17,7 @@ class Home extends React.Component {
   render() {
     return (
         <Fragment>
-            { this.props.loggedIn ? null  : <LoginButton navigation={this.props.navigation} /> }
+            { this.props.loggedIn ? <MemberDeliveryAddress />  : <LoginButton navigation={this.props.navigation} /> }
           <ScrollView style={{flex:1}}>
             <View style={styles.container}>
               <Banner />

@@ -38,7 +38,7 @@ class MainPageForYou extends React.Component {
   render() {
     return (
       <View style={styles.subTopContainer}>
-        <TouchableOpacity onPress={()=> { this.props.isLoading(), this.props.navigation.navigate("Check") }}><Text>Persist</Text></TouchableOpacity>
+        <TouchableOpacity onPress={()=> { this.props.resetTabView(); this.props.isLoggedOut(); this.props.navigation.navigate("Check") }}><Text>Persist</Text></TouchableOpacity>
         <View style={styles.container}>
           <Text style={styles.textLeft}>Senin İçin Seçtik</Text>
           <Text style={styles.textRight}>TÜMÜNÜ GÖR</Text>
@@ -107,13 +107,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    durum2: state.AuthReducer.loggedIn,
+    loggedIn: state.AuthReducer.loggedIn,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    isLoading: () => dispatch({type: 'LOGGED_OUT'}),
+    isLoggedOut: () => dispatch({type: 'LOGGED_OUT'},{type:'RESET_TAB_VIEW'}),
+    resetTabView: () => dispatch({type:'RESET_TAB_VIEW'}),
   };
 };
 

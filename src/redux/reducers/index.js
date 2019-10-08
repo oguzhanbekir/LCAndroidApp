@@ -1,17 +1,14 @@
 import {combineReducers} from 'redux';
-import AsyncStorage from '@react-native-community/async-storage';
-import {persistReducer} from 'redux-persist';
 import Indicator from './Indicator';
 import AuthReducer from './AuthReducer';
 import FilterProductReducer from './FilterProductsReducer';
 import FilterCampaignsIdReducer from './FilterCampaignsIdReducer';
 import FilterCampaignsDataReducer from './FilterCampaignsDataReducer';
+import FilterPizzasDataReducer from './FilterPizzasDataReducer'
+import FilterPizzasIdReducer from './FilterPizzasIdReducer'
+import GetBasketReducer from './GetBasketReducer'
 
-const config = {
-    key: 'root',
-    storage: AsyncStorage,
-    whitelist: ['AuthReducer'],
-};
+
 
 const rootReducer = combineReducers({
     Indicator,
@@ -19,6 +16,9 @@ const rootReducer = combineReducers({
     FilterProductReducer,
     FilterCampaignsIdReducer,
     FilterCampaignsDataReducer,
+    FilterPizzasDataReducer,
+    FilterPizzasIdReducer,
+    GetBasketReducer,
 });
 
-export default persistReducer(config, rootReducer);
+export default rootReducer;

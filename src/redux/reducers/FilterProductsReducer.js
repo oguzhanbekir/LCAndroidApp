@@ -1,20 +1,29 @@
 const FilterProductReducer = (state = {
-        index:0,
-        routes: [
-            {key: 'campaigns', title: 'KAMPANYALAR'},
-            {key: 'pizzas', title: 'PIZZALAR'},
-            {key: 'byproducts', title: 'YAN ÜRÜNLER'},
-        ]
-    }, action) => {
+    index: 0,
+    routes: [
+        {key: 'campaigns', title: 'KAMPANYALAR'},
+        {key: 'pizzas', title: 'PIZZALAR'},
+        {key: 'byproducts', title: 'YAN ÜRÜNLER'},
+    ],
+}, action) => {
     if (action.type === 'SWIPE_TVIEW') {
         return {
-            index:action.payload,
+            index: action.payload,
             routes: [
-            {key: 'campaigns', title: 'KAMPANYALAR'},
-            {key: 'pizzas', title: 'PIZZALAR'},
-            {key: 'byproducts', title: 'YAN ÜRÜNLER'},
-        ],
-        }
+                {key: 'campaigns', title: 'KAMPANYALAR'},
+                {key: 'pizzas', title: 'PIZZALAR'},
+                {key: 'byproducts', title: 'YAN ÜRÜNLER'},
+            ],
+        };
+    } else if (action.type === 'RESET_TAB_VIEW') {
+        return {
+            index: 0,
+            routes: [
+                {key: 'campaigns', title: 'KAMPANYALAR'},
+                {key: 'pizzas', title: 'PIZZALAR'},
+                {key: 'byproducts', title: 'YAN ÜRÜNLER'},
+            ],
+        };
     } else {
         return state;
     }

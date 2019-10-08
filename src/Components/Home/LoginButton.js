@@ -8,7 +8,6 @@ class LoginButton extends React.Component {
 
     render() {
         const { state, navigate } = this.props.navigation;
-      //  console.log(state.key)
         return (
             <View style={styles.container}>
                 <TouchableOpacity

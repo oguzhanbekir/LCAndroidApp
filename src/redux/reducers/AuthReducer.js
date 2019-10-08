@@ -3,6 +3,7 @@ const AuthReducer = (state = {
     name: '',
 }, action) => {
     switch (action.type) {
+
         case 'LOGGED_IN':
             return {
                 loggedIn: true,

@@ -18,6 +18,15 @@ import CustomInputForm from '../Components/Register/CustomInputForm';
 import {connect} from 'react-redux';
 import { HeaderBackButton } from 'react-navigation-stack';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import AsyncStorage from '@react-native-community/async-storage';
+
+let storeToken = key => {
+  try {
+    AsyncStorage.setItem('token', key);
+  } catch (e) {
+    // saving error
+  }
+};
 
 class Login extends React.Component {
 
@@ -37,6 +46,8 @@ class Login extends React.Component {
       errorMessagePassword: '',
     };
   }
+
+
 
   login = () => {
 
@@ -68,8 +79,7 @@ class Login extends React.Component {
             if (!res.data.message) {
               //kişinin bilgileri tutulacak
               this.props.isLoggedIn(res.data.result.name);
-             // alert(res.data.result.name)
-
+              storeToken(res.data.result.token.access_token);
               this.props.navigation.navigate('Check')
             } else {
               Alert.alert('', res.data.message, [{text: 'OK'}], {
@@ -119,7 +129,6 @@ class Login extends React.Component {
    if(this.state.indicator) {
      return (
          <View style={styles.container}>
-           {this.state.indicator ? null : <Indicator/>}
            <ScrollView showsVerticalScrollIndicator={false}>
              <View style={styles.body}>
                <CustomInputForm
@@ -288,7 +297,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    isLoggedIn: (username) => dispatch({type: 'LOGGED_IN', payload:username}),
+    isLoggedIn: (username) => (
+        dispatch({type: 'LOGGED_IN',payload:username})
+    ),
   };
 };
 
