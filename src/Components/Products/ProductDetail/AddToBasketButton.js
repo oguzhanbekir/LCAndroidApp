@@ -1,31 +1,34 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
 
 class AddToBasketButton extends React.Component {
     state = {
-        counter: 1,
+        counter: this.props.counterPizza,
     };
 
     subtractionPress() {
         {
-            this.state.counter > 1 &&
-            this.setState({
-
+            this.props.counterPizza > 1 &&
+                this.props.counterPizzaUpdate(this.props.counterPizza-1);
+         /*   this.setState({
                 counter: this.state.counter - 1,
-            });
+            });*/
         }
     }
 
     additionPress() {
         {
-            this.state.counter > 0 &&
-            this.setState({
+            this.props.counterPizza > 0 &&
+                this.props.counterPizzaUpdate(this.props.counterPizza+1);
+           /* this.setState({
                 counter: this.state.counter + 1,
-            });
+            });*/
         }
     }
 
     addBasket(){
+
         alert("add basket")
     }
 
@@ -36,7 +39,7 @@ class AddToBasketButton extends React.Component {
                     <TouchableOpacity onPress={() => this.subtractionPress()}>
                         <Text style={styles.subText}>-</Text>
                     </TouchableOpacity>
-                    <Text style={styles.counterText}>{this.state.counter}</Text>
+                    <Text style={styles.counterText}>{this.props.counterPizza}</Text>
                     <TouchableOpacity onPress={() => this.additionPress()}>
                         <Text style={styles.addText}>+</Text>
                     </TouchableOpacity>
@@ -88,4 +91,19 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddToBasketButton;
+const mapStateToProps = state => {
+    return {
+        counterPizza: state.ProductDetailDataReducer.counterPizza,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        counterPizzaUpdate: (counterPizza) => dispatch({type: 'PRODUCT_DETAIL_DATA_COUNTER', payload: counterPizza}),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(AddToBasketButton);

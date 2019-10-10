@@ -1,61 +1,53 @@
 import React, {Fragment} from 'react';
 import {View, StyleSheet, Image, Text, FlatList, TouchableOpacity} from 'react-native';
-import {httpClient} from '../../../HttpClient/HttpClient';
 import {connect} from 'react-redux';
-import Indicator from '../../Indicator';
 
 class ProductInfo extends React.Component {
-    state = {
-        productDetail: [],
+
+    detailIngredient = () => {
+        return this.props.productDetail.options[1].items.filter(data => data.defaultQuantity === 0 && data.quantity > 0);
     };
 
-    componentDidMount() {
-        this.getData();
-    }
-
-    getData = () => {
-        const data = [];
-        httpClient
-            .get('/web/Product/GetProductDetails?Name=' + this.props.name + '&Size=' + this.props.size + '&existingOrderId=' + this.props.existingOrderId)
-            .then(res => {
-                data.push(res.data.result);
-                this.setState({
-                    productDetail: data,
-                });
-            });
-
-
+    detailIngredientDefault = () => {
+        return this.props.productDetail.options[1].items.filter(data => data.defaultQuantity != 0);
     };
 
     render() {
-        console.log(this.state.productDetail)
+        const detailIngredient = this.detailIngredient();
+        const detailIngredientDefault = this.detailIngredientDefault();
+
         return (
             <Fragment>
-                {this.state.productDetail.length ?
-                    <Fragment>
-                        <Image source={{uri: this.state.productDetail[0].image}}
-                               style={{height: 250}}
-                        />
-                        <View style={{padding: 15, backgroundColor: '#fff'}}>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.titleName}>{this.state.productDetail[0].name}</Text>
-                                <Text
-                                    style={styles.titlePrice}>{'₺' + this.state.productDetail[0].price.price.toFixed(2)}</Text>
-                            </View>
-                            <View>
-                                <Text style={styles.titleDetail}>{this.state.productDetail[0].detail}</Text>
-                            </View>
+                <Image source={{uri: this.props.productDetail.image}}
+                       style={{height: 250}}
+                />
+                <View style={{padding: 15, backgroundColor: '#fff'}}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.titleName}>{this.props.productDetail.name}</Text>
+                        <Text
+                            style={styles.titlePrice}>{'₺' + ((this.props.productDetail.price.price+this.props.totalIngredient)*this.props.counterPizza).toFixed(2)}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                        {detailIngredientDefault.map(function (data, index) {
+                            return <Text key={data.id} style={styles.titleDetail}><Text
+                                style={data.quantity === 0 ? styles.titleDetailStrike : styles.titleDetail}>{data.quantity > 1 ? data.quantity + 'x ' + data.name + ' [+ ₺' + data.price.price.toFixed(2) + ']' : data.name}</Text>{detailIngredient.length === 0 ? (index < detailIngredientDefault.length-1 ? ', ' : '') : ', '}
+                            </Text>
+                        })}
+                        {detailIngredient.map(function (data, index) {
 
-                            <View style={{paddingTop: 20}}>
-                                <TouchableOpacity
-                                    style={{padding:10}}
-                                    onPress={()=>this.props.navigation.navigate("Ingredient",{productDetail:this.state.productDetail})}
-                                >
-                                    <Text  style={styles.titleMaterial}>{'MALZEME EKLE/ÇIKAR'}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </Fragment> : <Indicator/>}
+                            return <Text key={data.id}
+                                         style={styles.titleDetail}>{data.quantity + 'x ' + data.name + ' [+ ₺' + data.price.price.toFixed(2) + ']' + (index < detailIngredient.length-1 ? ', ' : '')}</Text>;
+                        })}
+                    </View>
+                    <View style={{paddingTop: 20}}>
+                        <TouchableOpacity
+                            style={{padding: 10}}
+                            onPress={() => this.props.navigation.navigate('Ingredient', {productDetail: this.props.productDetail})}
+                        >
+                            <Text style={styles.titleMaterial}>{'MALZEME EKLE/ÇIKAR'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </Fragment>
         );
     }
@@ -84,6 +76,12 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: 'dimgray',
     },
+    titleDetailStrike: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: 'dimgray',
+        textDecorationLine: 'line-through',
+    },
     titleMaterial: {
         textAlign: 'center',
         fontSize: 16,
@@ -95,6 +93,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
+        productDetail: state.ProductDetailDataReducer.data,
+        totalIngredient: state.ProductDetailDataReducer.totalIngredient,
+        counterPizza: state.ProductDetailDataReducer.counterPizza,
     };
 };
 

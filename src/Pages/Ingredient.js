@@ -1,21 +1,28 @@
 import React from 'react';
 import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
+import {connect} from 'react-redux';
 
-const _renderItem = ({id, name , quantity}) => {
+const _renderItem = ({id, name, quantity, defaultQuantity, changeQuantity}) => {
+
     return (
         <View style={styles.item}>
-            <Text style={styles.titleDetail}>{name}</Text>
+            <Text style={quantity === 0 && defaultQuantity !== 0 ? styles.titleDetailStrike :
+                defaultQuantity !== 0 && quantity === 2 ? styles.titleDetailColor
+                    : defaultQuantity === 0 && quantity > 0 ? styles.titleDetailColor : styles.titleDetail
+            }>{defaultQuantity !== 0 && quantity === 0 ? name : defaultQuantity === 0 && quantity === 0 ? name : quantity + 'x ' + name}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', width: 80}}>
                 <TouchableOpacity
+                    disabled={(defaultQuantity !== 0 && quantity === 0) || (defaultQuantity === 0 && quantity === 0)}
                     style={styles.itemButton}
-                    onPress={() => alert(name)}
+                    onPress={() => changeQuantity(id, 'subtraction')}
                 >
                     <Text style={{fontSize: 30, fontWeight: '500'}}>{'-'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    disabled={(defaultQuantity !== 0 && quantity === 2) || (defaultQuantity === 0 && quantity === 2)}
                     style={styles.itemButton}
-                    onPress={() => alert(id)}
+                    onPress={() => changeQuantity(id, 'addition')}
                 >
                     <Text style={{fontSize: 20, fontWeight: '500'}}>{'+'}</Text>
                 </TouchableOpacity>
@@ -30,16 +37,17 @@ const FlatListItemSeparator = () => {
         <View style={{height: 0.5, width: '100%', backgroundColor: '#C8C8C8'}}/>
     );
 };
-//({item}) => <_renderItem id={item.id} quantity={2} changeQuantity/>
-const RenderList = ({data}) => {
+const RenderList = ({data, changeQuantity}) => {
     return (
         <View style={{flex: 1}}>
             <FlatList
                 data={data}
-                renderItem={({item}) => <_renderItem id={item.id} name={item.name} quantity={item.defaultQuantity} />}
+                renderItem={({item}) => <_renderItem id={item.id} name={item.name} quantity={item.quantity}
+                                                     defaultQuantity={item.defaultQuantity}
+                                                     changeQuantity={changeQuantity}/>}
                 keyExtractor={item => item.id}
                 ItemSeparatorComponent={FlatListItemSeparator}
-                //extraData={this.props.data}
+                extraData={data}
             />
         </View>);
 };
@@ -51,25 +59,110 @@ class Ingredient extends React.Component {
             {key: 'mypizza', title: 'PİZZAMDAKİ MALZEMELER'},
             {key: 'extra', title: 'EKSTRA MALZEMELER'},
         ],
-        items: this.props.navigation.getParam('productDetail')[0].options[1].items,
+        items: this.props.productDetail,
+        totalPrice: this.props.totalIngredient,
     };
 
     extraOrPizzaIngredient(index) {
-        return this.state.items.filter(t => t.defaultQuantity === index);
+        return this.state.items.options[1].items.filter(data => data.defaultQuantity !== index);
     };
 
 
-    changeQuantity = (id, quantity) => {
-        alert("olduuu"+ id)
+    changeQuantity = (id, operation) => {
+        const productDetail = this.state.items.options[1].items.find(data => data.id === id);
+        if (operation === 'subtraction') {
+            {
+                productDetail.defaultQuantity !== 0 ?
+                    this.setState(prevState => ({
+                        totalPrice: Math.abs(this.state.totalPrice - (productDetail.price.price * (productDetail.quantity - 1))),
+                        items: {
+                            ...prevState.items,
+                            options: {
+                                ...prevState.items.options,
+                                1: {
+                                    ...prevState.items.options[1],
+                                    items: prevState.items.options[1].items.map(
+                                        data => data.id === productDetail.id ? {
+                                            ...data,
+                                            quantity: productDetail.quantity - 1,
+                                        } : data,
+                                    ),
+                                },
+                            },
+                        },
+                    }))
+                    : productDetail.quantity > 0 &&
+                    this.setState(prevState => ({
+                        items: {
+                            ...prevState.items,
+                            options: {
+                                ...prevState.items.options,
+                                1: {
+                                    ...prevState.items.options[1],
+                                    items: prevState.items.options[1].items.map(
+                                        data => data.id === productDetail.id ? {
+                                            ...data,
+                                            quantity: productDetail.quantity - 1,
+                                        } : data,
+                                    ),
+                                },
+                            },
+                        },
+                        totalPrice: Math.abs(this.state.totalPrice - productDetail.price.price),
+                    }));
+            }
+        } else if (operation === 'addition') {
+            {
+                productDetail.defaultQuantity !== 0 && productDetail.quantity < 2 ?
+                    this.setState(prevState => ({
+                        items: {
+                            ...prevState.items,
+                            options: {
+                                ...prevState.items.options,
+                                1: {
+                                    ...prevState.items.options[1],
+                                    items: prevState.items.options[1].items.map(
+                                        data => data.id === productDetail.id ? {
+                                            ...data,
+                                            quantity: productDetail.quantity + 1,
+                                        } : data,
+                                    ),
+                                },
+                            },
+                        },
+                        totalPrice: this.state.totalPrice + (productDetail.price.price * productDetail.quantity),
+                    }))
+                    :
+                    productDetail.defaultQuantity === 0 &&
+                    this.setState(prevState => ({
+                        items: {
+                            ...prevState.items,
+                            options: {
+                                ...prevState.items.options,
+                                1: {
+                                    ...prevState.items.options[1],
+                                    items: prevState.items.options[1].items.map(
+                                        data => data.id === productDetail.id ? {
+                                            ...data,
+                                            quantity: productDetail.quantity + 1,
+                                        } : data,
+                                    ),
+                                },
+                            },
+                        },
+                        totalPrice: this.state.totalPrice + productDetail.price.price,
+                    }));
+            }
+        }
     };
 
 
     _renderTabView = ({route}) => {
         switch (route.key) {
             case 'mypizza':
-                return <RenderList data={this.extraOrPizzaIngredient(1)}/>;
+                return <RenderList changeQuantity={this.changeQuantity} data={this.extraOrPizzaIngredient(0)}/>;
             case 'extra':
-                return <RenderList data={this.extraOrPizzaIngredient(0)}/>;
+                return <RenderList changeQuantity={this.changeQuantity} data={this.extraOrPizzaIngredient(1)}/>;
             default:
                 return null;
         }
@@ -87,9 +180,9 @@ class Ingredient extends React.Component {
         />;
 
     apply() {
-        alert('apply');
+        this.props.navigation.goBack();
+        this.props.productDetailUpdate(this.state.items, this.state.totalPrice);
     }
-
 
     render() {
         return (
@@ -105,7 +198,7 @@ class Ingredient extends React.Component {
                 />
                 <View style={styles.containerButton}>
                     <View style={styles.leftContainer}>
-                        <Text style={styles.applyText}>{'+ ₺0,00'}</Text>
+                        <Text style={styles.applyText}>{'+ ₺' +this.state.totalPrice.toFixed(2)}</Text>
                     </View>
                     <View style={{borderLeftWidth: 1, borderLeftColor: 'white'}}/>
                     <View style={styles.rightContainer}>
@@ -114,8 +207,6 @@ class Ingredient extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-
-
             </View>
         );
     }
@@ -170,6 +261,32 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '700',
     },
+    titleDetailStrike: {
+        fontSize: 15,
+        fontWeight: '700',
+        textDecorationLine: 'line-through',
+    },
+    titleDetailColor: {
+        fontSize: 15,
+        color: 'orange',
+        fontWeight: '700',
+    },
 });
 
-export default Ingredient;
+const mapStateToProps = state => {
+    return {
+        productDetail: state.ProductDetailDataReducer.data,
+        totalIngredient: state.ProductDetailDataReducer.totalIngredient,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        productDetailUpdate: (data, totalPrice) => dispatch({type: 'PRODUCT_DETAIL_DATA', payload: data, totalIngredient: totalPrice}),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(Ingredient);

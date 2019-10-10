@@ -7,6 +7,7 @@ import FilterCampaignsDataReducer from './FilterCampaignsDataReducer';
 import FilterPizzasDataReducer from './FilterPizzasDataReducer'
 import FilterPizzasIdReducer from './FilterPizzasIdReducer'
 import GetBasketReducer from './GetBasketReducer'
+import ProductDetailDataReducer from './ProductDetailDataReducer'
 
 
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     FilterPizzasDataReducer,
     FilterPizzasIdReducer,
     GetBasketReducer,
+    ProductDetailDataReducer,
 });
 
 export default rootReducer;

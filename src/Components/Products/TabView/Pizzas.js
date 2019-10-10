@@ -24,11 +24,11 @@ class Pizzas extends React.Component {
 
     selectionOnPress(buttonType) {
         this.setState({selectedButton: buttonType});
-        if (buttonType == 'SMALL') {
+        if (buttonType === 'SMALL') {
             this.getData(this.props.filterId, '101745413708');
-        } else if (buttonType == 'MEDIUM') {
+        } else if (buttonType === 'MEDIUM') {
             this.getData(this.props.filterId, '100049097560');
-        } else if (buttonType == 'LARGE') {
+        } else if (buttonType === 'LARGE') {
             this.getData(this.props.filterId, '107174060862');
         }
     }
@@ -98,7 +98,7 @@ class Pizzas extends React.Component {
                             padding: 5,
                         }}>
                         <TouchableOpacity
-                            disabled={this.state.selectedButton === 'SMALL' ? true : false}
+                            disabled={this.state.selectedButton === 'SMALL'}
                             style={
                                 this.state.selectedButton === 'SMALL'
                                     ? styles.buttonPress
@@ -123,7 +123,7 @@ class Pizzas extends React.Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            disabled={this.state.selectedButton === 'MEDIUM' ? true : false}
+                            disabled={this.state.selectedButton === 'MEDIUM'}
                             style={
                                 this.state.selectedButton === 'MEDIUM'
                                     ? styles.buttonPress
@@ -148,7 +148,7 @@ class Pizzas extends React.Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            disabled={this.state.selectedButton === 'LARGE' ? true : false}
+                            disabled={this.state.selectedButton === 'LARGE'}
                             style={
                                 this.state.selectedButton === 'LARGE'
                                     ? styles.buttonPress
