@@ -4,7 +4,6 @@ import {TabView, TabBar} from 'react-native-tab-view';
 import {connect} from 'react-redux';
 
 const _renderItem = ({id, name, quantity, defaultQuantity, changeQuantity}) => {
-
     return (
         <View style={styles.item}>
             <Text style={quantity === 0 && defaultQuantity !== 0 ? styles.titleDetailStrike :
@@ -39,16 +38,22 @@ const FlatListItemSeparator = () => {
 };
 const RenderList = ({data, changeQuantity}) => {
     return (
-        <View style={{flex: 1}}>
-            <FlatList
-                data={data}
-                renderItem={({item}) => <_renderItem id={item.id} name={item.name} quantity={item.quantity}
-                                                     defaultQuantity={item.defaultQuantity}
-                                                     changeQuantity={changeQuantity}/>}
-                keyExtractor={item => item.id}
-                ItemSeparatorComponent={FlatListItemSeparator}
-                extraData={data}
-            />
+        <View style={{
+            flex: 1, justifyContent: 'center',
+        }}>
+            {data.length ?
+                <FlatList
+                    data={data}
+                    renderItem={({item}) => <_renderItem id={item.id} name={item.name} quantity={item.quantity}
+                                                         defaultQuantity={item.defaultQuantity}
+                                                         changeQuantity={changeQuantity}/>}
+                    keyExtractor={item => item.id}
+                    ItemSeparatorComponent={FlatListItemSeparator}
+                    extraData={data}
+                /> :
+                <Text style={{fontSize: 20, alignSelf: 'center'}}>Bu pizza için hiç malzeme bulamadık</Text>
+            }
+
         </View>);
 };
 
@@ -67,7 +72,6 @@ class Ingredient extends React.Component {
         return this.state.items.options[1].items.filter(data => data.defaultQuantity !== index);
     };
 
-
     changeQuantity = (id, operation) => {
         const productDetail = this.state.items.options[1].items.find(data => data.id === id);
         if (operation === 'subtraction') {
@@ -77,36 +81,32 @@ class Ingredient extends React.Component {
                         totalPrice: Math.abs(this.state.totalPrice - (productDetail.price.price * (productDetail.quantity - 1))),
                         items: {
                             ...prevState.items,
-                            options: {
-                                ...prevState.items.options,
-                                1: {
-                                    ...prevState.items.options[1],
-                                    items: prevState.items.options[1].items.map(
-                                        data => data.id === productDetail.id ? {
-                                            ...data,
-                                            quantity: productDetail.quantity - 1,
-                                        } : data,
-                                    ),
-                                },
+                            options: [{...prevState.items.options[0]}, {
+                                ...prevState.items.options[1],
+                                items: prevState.items.options[1].items.map(
+                                    data => data.id === productDetail.id ? {
+                                        ...data,
+                                        quantity: productDetail.quantity - 1,
+                                    } : data,
+                                ),
                             },
+                            ],
                         },
                     }))
                     : productDetail.quantity > 0 &&
                     this.setState(prevState => ({
                         items: {
                             ...prevState.items,
-                            options: {
-                                ...prevState.items.options,
-                                1: {
-                                    ...prevState.items.options[1],
-                                    items: prevState.items.options[1].items.map(
-                                        data => data.id === productDetail.id ? {
-                                            ...data,
-                                            quantity: productDetail.quantity - 1,
-                                        } : data,
-                                    ),
-                                },
+                            options: [{...prevState.items.options[0]}, {
+                                ...prevState.items.options[1],
+                                items: prevState.items.options[1].items.map(
+                                    data => data.id === productDetail.id ? {
+                                        ...data,
+                                        quantity: productDetail.quantity - 1,
+                                    } : data,
+                                ),
                             },
+                            ],
                         },
                         totalPrice: Math.abs(this.state.totalPrice - productDetail.price.price),
                     }));
@@ -117,18 +117,16 @@ class Ingredient extends React.Component {
                     this.setState(prevState => ({
                         items: {
                             ...prevState.items,
-                            options: {
-                                ...prevState.items.options,
-                                1: {
-                                    ...prevState.items.options[1],
-                                    items: prevState.items.options[1].items.map(
-                                        data => data.id === productDetail.id ? {
-                                            ...data,
-                                            quantity: productDetail.quantity + 1,
-                                        } : data,
-                                    ),
-                                },
+                            options: [{...prevState.items.options[0]}, {
+                                ...prevState.items.options[1],
+                                items: prevState.items.options[1].items.map(
+                                    data => data.id === productDetail.id ? {
+                                        ...data,
+                                        quantity: productDetail.quantity + 1,
+                                    } : data,
+                                ),
                             },
+                            ],
                         },
                         totalPrice: this.state.totalPrice + (productDetail.price.price * productDetail.quantity),
                     }))
@@ -137,18 +135,16 @@ class Ingredient extends React.Component {
                     this.setState(prevState => ({
                         items: {
                             ...prevState.items,
-                            options: {
-                                ...prevState.items.options,
-                                1: {
-                                    ...prevState.items.options[1],
-                                    items: prevState.items.options[1].items.map(
-                                        data => data.id === productDetail.id ? {
-                                            ...data,
-                                            quantity: productDetail.quantity + 1,
-                                        } : data,
-                                    ),
-                                },
+                            options: [{...prevState.items.options[0]}, {
+                                ...prevState.items.options[1],
+                                items: prevState.items.options[1].items.map(
+                                    data => data.id === productDetail.id ? {
+                                        ...data,
+                                        quantity: productDetail.quantity + 1,
+                                    } : data,
+                                ),
                             },
+                            ],
                         },
                         totalPrice: this.state.totalPrice + productDetail.price.price,
                     }));
@@ -180,8 +176,9 @@ class Ingredient extends React.Component {
         />;
 
     apply() {
-        this.props.navigation.goBack();
+        this.props.navigation.state.params.updateData();
         this.props.productDetailUpdate(this.state.items, this.state.totalPrice);
+        this.props.navigation.goBack();
     }
 
     render() {
@@ -198,11 +195,11 @@ class Ingredient extends React.Component {
                 />
                 <View style={styles.containerButton}>
                     <View style={styles.leftContainer}>
-                        <Text style={styles.applyText}>{'+ ₺' +this.state.totalPrice.toFixed(2)}</Text>
+                        <Text style={styles.applyText}>{'+ ₺' + this.state.totalPrice.toFixed(2)}</Text>
                     </View>
                     <View style={{borderLeftWidth: 1, borderLeftColor: 'white'}}/>
                     <View style={styles.rightContainer}>
-                        <TouchableOpacity onPress={() => this.apply()}>
+                        <TouchableOpacity style={{padding: 10}} onPress={() => this.apply()}>
                             <Text style={styles.applyText}>{'Uygula'}</Text>
                         </TouchableOpacity>
                     </View>
@@ -265,6 +262,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '700',
         textDecorationLine: 'line-through',
+        color: 'gray',
     },
     titleDetailColor: {
         fontSize: 15,
@@ -277,12 +275,17 @@ const mapStateToProps = state => {
     return {
         productDetail: state.ProductDetailDataReducer.data,
         totalIngredient: state.ProductDetailDataReducer.totalIngredient,
+        counterPizza: state.ProductDetailDataReducer.counterPizza,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        productDetailUpdate: (data, totalPrice) => dispatch({type: 'PRODUCT_DETAIL_DATA', payload: data, totalIngredient: totalPrice}),
+        productDetailUpdate: (data, totalPrice) => dispatch({
+            type: 'PRODUCT_DETAIL_DATA',
+            payload: data,
+            totalIngredient: totalPrice,
+        }),
     };
 };
 

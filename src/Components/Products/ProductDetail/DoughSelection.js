@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {View, StyleSheet, Image, Text, FlatList, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {Icon} from 'react-native-elements';
 
@@ -14,62 +14,59 @@ class DoughSelection extends React.Component {
             selectedButton: buttonType,
             selectedRadioButton: '',
         });
-        if (buttonType == 'Normal') {
-            alert('normal');
-        } else if (buttonType == 'Thin') {
-            alert('ince');
-        }
+        this.props.doughSelection(buttonType);
     }
 
     selectionOnPressRadio(buttonType) {
         this.setState({selectedRadioButton: buttonType});
-        if (buttonType == 'exquisite') {
-            alert('exquisite');
-        } else if (buttonType == 'parmesan') {
-            alert('parmesan');
-        }
+        this.props.doughSelection(buttonType);
+
     }
 
     render() {
+        const parmesanPrice = this.props.productDetail.options[0].items.find(data => data.name === 'Parmesan Kenar');
+        const nefisPrice = this.props.productDetail.options[0].items.find(data => data.name === 'Nefis Kenar');
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>HAMUR SEÇİMİ</Text>
-                <TouchableOpacity
-                    style={
-                        this.state.selectedButton === 'Normal'
-                            ? styles.buttonDoughSelected
-                            : styles.buttonDoughSelect
-                    }
-                    onPress={() => this.selectionOnPress('Normal')}>
-                    <Text
+                {this.props.productDetail.options[0].items.length === 0 ? null :
+
+                    <TouchableOpacity
                         style={
                             this.state.selectedButton === 'Normal'
-                                ? styles.buttonDoughSelectedText
-                                : styles.buttonDoughSelectText
-                        }>
-                        {'Normal Hamur'}
-                    </Text>
-                    {this.state.selectedButton === 'Normal' &&
-                    <Icon
-                        size={17}
-                        color={'orange'}
-                        name="check"
-                        type="feather"
-                    />
-                    }
-                </TouchableOpacity>
+                                ? styles.buttonDoughSelected
+                                : styles.buttonDoughSelect
+                        }
+                        onPress={() => this.selectionOnPress('Normal')}>
+                        <Text
+                            style={
+                                this.state.selectedButton === 'Normal'
+                                    ? styles.buttonDoughSelectedText
+                                    : styles.buttonDoughSelectText
+                            }>
+                            {'Normal Hamur'}
+                        </Text>
+                        {this.state.selectedButton === 'Normal' &&
+                        <Icon
+                            size={17}
+                            color={'orange'}
+                            name="check"
+                            type="feather"
+                        />
+                        }
+                    </TouchableOpacity>}
                 {this.state.selectedButton === 'Normal' &&
                 <Fragment>
                     <TouchableOpacity
                         style={styles.buttonDoughSelectRadio}
-                        onPress={() => this.selectionOnPressRadio('exquisite')}>
+                        onPress={() => this.selectionOnPressRadio('Nefis')}>
 
                         <Icon
                             size={17}
-                            color={this.state.selectedRadioButton === 'exquisite' ?
+                            color={this.state.selectedRadioButton === 'Nefis' ?
                                 'orange' : null
                             }
-                            name={this.state.selectedRadioButton === 'exquisite' ?
+                            name={this.state.selectedRadioButton === 'Nefis' ?
                                 'radio-button-checked' : 'radio-button-unchecked'
                             }
                             type="MaterialIcons"
@@ -77,23 +74,23 @@ class DoughSelection extends React.Component {
 
                         <Text
                             style={
-                                this.state.selectedRadioButton === 'exquisite'
+                                this.state.selectedRadioButton === 'Nefis'
                                     ? styles.buttonDoughSelectedText
                                     : styles.buttonDoughSelectText
                             }>
-                            {' Nefis Kenar Ekle [+ ₺5,00]'}
+                            {' Nefis Kenar Ekle [+ ₺'+nefisPrice.price.price.toFixed(2)+']'}
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonDoughSelectRadio}
-                        onPress={() => this.selectionOnPressRadio('parmesan')}>
+                        onPress={() => this.selectionOnPressRadio('Parmesan')}>
 
                         <Icon
                             size={17}
-                            color={this.state.selectedRadioButton === 'parmesan' ?
+                            color={this.state.selectedRadioButton === 'Parmesan' ?
                                 'orange' : null
                             }
-                            name={this.state.selectedRadioButton === 'parmesan' ?
+                            name={this.state.selectedRadioButton === 'Parmesan' ?
                                 'radio-button-checked' : 'radio-button-unchecked'
                             }
                             type="MaterialIcons"
@@ -101,39 +98,40 @@ class DoughSelection extends React.Component {
 
                         <Text
                             style={
-                                this.state.selectedRadioButton === 'parmesan'
+                                this.state.selectedRadioButton === 'Parmesan'
                                     ? styles.buttonDoughSelectedText
                                     : styles.buttonDoughSelectText
                             }>
-                            {' Parmesan Kenar Ekle [+ ₺5,00]'}
+                            {' Nefis Kenar Ekle [+ ₺'+parmesanPrice.price.price.toFixed(2)+']'}
                         </Text>
                     </TouchableOpacity>
                 </Fragment>
                 }
-                <TouchableOpacity
-                    style={
-                        this.state.selectedButton === 'Thin'
-                            ? styles.buttonDoughSelected
-                            : styles.buttonDoughSelect
-                    }
-                    onPress={() => this.selectionOnPress('Thin')}>
-                    <Text
+                {this.props.productDetail.options[0].items.length === 4 ?
+                    <TouchableOpacity
                         style={
-                            this.state.selectedButton === 'Thin'
-                                ? styles.buttonDoughSelectedText
-                                : styles.buttonDoughSelectText
-                        }>
-                        {'İnce Klasik Hamur'}
-                    </Text>
-                    {this.state.selectedButton === 'Thin' &&
-                    <Icon
-                        size={17}
-                        color={'orange'}
-                        name="check"
-                        type="feather"
-                    />
-                    }
-                </TouchableOpacity>
+                            this.state.selectedButton === 'İnce'
+                                ? styles.buttonDoughSelected
+                                : styles.buttonDoughSelect
+                        }
+                        onPress={() => this.selectionOnPress('İnce')}>
+                        <Text
+                            style={
+                                this.state.selectedButton === 'İnce'
+                                    ? styles.buttonDoughSelectedText
+                                    : styles.buttonDoughSelectText
+                            }>
+                            {'İnce Klasik Hamur'}
+                        </Text>
+                        {this.state.selectedButton === 'İnce' &&
+                        <Icon
+                            size={17}
+                            color={'orange'}
+                            name="check"
+                            type="feather"
+                        />
+                        }
+                    </TouchableOpacity> : null}
             </View>
         );
     }
@@ -188,12 +186,13 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
+        productDetail: state.ProductDetailDataReducer.data,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        //degistir: () => dispatch({type: 'LOAD_HOME', payload: 'false'}),
+        doughSelection: (data) => dispatch({type: 'PRODUCT_DETAIL_DATA_DOUGH_SELECTION', payload: data}),
     };
 };
 

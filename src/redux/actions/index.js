@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 class Login extends React.Component {
     render() {
-        return null
+        return null;
     }
 }
 
@@ -15,7 +15,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToprops = dispatch => {
     return {
-        isLoggedIn: (username) => dispatch({type: 'LOGGED_IN', payload:username}),
+        isLoggedIn: (username) => dispatch({type: 'LOGGED_IN', payload: username}),
     };
 };
 

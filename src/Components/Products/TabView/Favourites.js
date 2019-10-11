@@ -21,7 +21,7 @@ class Favourites extends React.Component {
         httpClient
             .get('/web/Member/GetFavoriteProducts')
             .then(res => {
-                console.log(res)
+                console.log(res);
                 this.setState({
                     data: res.data.result,
                 });

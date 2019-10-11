@@ -4,11 +4,10 @@ import AuthReducer from './AuthReducer';
 import FilterProductReducer from './FilterProductsReducer';
 import FilterCampaignsIdReducer from './FilterCampaignsIdReducer';
 import FilterCampaignsDataReducer from './FilterCampaignsDataReducer';
-import FilterPizzasDataReducer from './FilterPizzasDataReducer'
-import FilterPizzasIdReducer from './FilterPizzasIdReducer'
-import GetBasketReducer from './GetBasketReducer'
-import ProductDetailDataReducer from './ProductDetailDataReducer'
-
+import FilterPizzasDataReducer from './FilterPizzasDataReducer';
+import FilterPizzasIdReducer from './FilterPizzasIdReducer';
+import GetBasketReducer from './GetBasketReducer';
+import ProductDetailDataReducer from './ProductDetailDataReducer';
 
 
 const rootReducer = combineReducers({

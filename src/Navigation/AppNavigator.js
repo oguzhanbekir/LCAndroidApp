@@ -1,11 +1,14 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator, HeaderBackButton} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {Icon} from 'react-native-elements';
 import {fromRight} from 'react-navigation-transitions';
 import BottomTabBar from 'react-navigation-selective-tab-bar';
+
+import {httpClient} from '../HttpClient/HttpClient';
+
 
 import Home from '../Pages/Home';
 import Basket from '../Pages/Basket';
@@ -67,6 +70,40 @@ HomeTab.navigationOptions = ({navigation}) => {
     };
 };
 
+function addFavoriteProduct(navigation) {
+    httpClient
+        .post('/web/Member/AddFavoriteProduct', {
+            ProductId: navigation.state.params.id,
+        })
+        .then(res => {
+
+            if (!res.data.message) {
+                navigation.setParams({heart: true});
+                alert('olduuu');
+            } else {
+                Alert.alert('', res.data.message, [{text: 'OK'}], {
+                    cancelable: false,
+                });
+            }
+        });
+}
+
+function deleteFavoriteProduct(navigation) {
+    httpClient
+        .delete('/web/Member/DeleteFavoriteProduct?id=' + navigation.state.params.id)
+        .then(res => {
+            console.log(res);
+            if (!res.data.message) {
+                navigation.setParams({heart: false});
+            } else {
+                Alert.alert('', res.data.message, [{text: 'OK'}], {
+                    cancelable: false,
+                });
+            }
+        });
+
+}
+
 const ProductsTab = createStackNavigator(
     {
         Products: {
@@ -81,14 +118,25 @@ const ProductsTab = createStackNavigator(
         ProductDetail: {
             screen: ProductDetail,
             navigationOptions: ({navigation}) => {
+                httpClient
+                    .get('/web/Member/GetFavoriteProducts')
+                    .then(res => {
+                        const data = res.data.result.find(data => data.id === navigation.state.params.id) || {id: ''};
+                        if (data.id === navigation.state.params.id) {
+                            navigation.setParams({heart: true});
+                        }
+                    });
                 return {
                     headerTitle: null,
-                    headerRight:  (
-                        <TouchableOpacity style={{marginRight:20}}>
-                            <Icon  size={25} name="heart-outlined" type="entypo" />
+                    headerRight: (
+                        <TouchableOpacity
+                            onPress={() => navigation.state.params.heart ? deleteFavoriteProduct(navigation) : addFavoriteProduct(navigation)}
+                            style={{marginRight: 20}}>
+                            <Icon size={25} name={navigation.state.params.heart ? 'heart' : 'heart-outlined'}
+                                  type="entypo" color={navigation.state.params.heart ? 'red' : 'black'}/>
                         </TouchableOpacity>
 
-                        )
+                    ),
                 };
             },
         },

@@ -7,21 +7,21 @@ class LoginButton extends React.Component {
     state = {images: []};
 
     render() {
-        const { state, navigate } = this.props.navigation;
+        const {state, navigate} = this.props.navigation;
         return (
             <View style={styles.container}>
                 <TouchableOpacity
                     style={styles.buttonLogin}
-                    onPress={() => navigate('Login',  { backHome: 'Home' })
+                    onPress={() => navigate('Login', {backHome: 'Home'})
                     }>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'space-between'}}>
-                    <Text style={styles.buttonLoginText}>Lütfen Giriş Yap veya Kayıt Ol</Text>
-                    <Icon
-                        size={25}
-                        color={'gray'}
-                        name="keyboard-arrow-right"
-                        type="MaterialIcons"
-                    />
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Text style={styles.buttonLoginText}>Lütfen Giriş Yap veya Kayıt Ol</Text>
+                        <Icon
+                            size={25}
+                            color={'gray'}
+                            name="keyboard-arrow-right"
+                            type="MaterialIcons"
+                        />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -30,8 +30,7 @@ class LoginButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
     buttonLogin: {
         backgroundColor: '#fff',
         padding: 10,

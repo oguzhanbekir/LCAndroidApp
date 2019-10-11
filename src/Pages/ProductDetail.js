@@ -14,7 +14,8 @@ class ProductDetail extends React.Component {
     };
 
     componentDidMount() {
-        const url = (this.props.navigation.state.params.id).split('/');
+
+        const url = (this.props.navigation.state.params.link).split('/');
         this.getData(url[3], url[4]);
     }
 
@@ -22,7 +23,9 @@ class ProductDetail extends React.Component {
         httpClient
             .get('/web/Product/GetProductDetails?Name=' + name + '&Size=' + size + '&existingOrderId=' + this.props.existingOrderId)
             .then(res => {
+                this.props.productDetailDelete();
                 this.props.productDetailData(res.data.result);
+
                 this.setState({
                     productDetail: res.data.result,
                 });
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
-        productDetail:state.ProductDetailDataReducer.data,
+        productDetail: state.ProductDetailDataReducer.data,
 
     };
 };
@@ -64,6 +67,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         productDetailData: (data) => dispatch({type: 'PRODUCT_DETAIL_DATA', payload: data}),
+        productDetailDelete: () => dispatch({type: 'PRODUCT_DETAIL_DATA_DELETE'}),
     };
 };
 

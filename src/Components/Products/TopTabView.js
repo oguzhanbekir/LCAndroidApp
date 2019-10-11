@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View, StyleSheet, Dimensions, Text, Button} from 'react-native';
-import {TabView , TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 
 import Campaigns from './TabView/Campaigns';
 import Pizzas from './TabView/Pizzas';
@@ -42,7 +42,7 @@ class TopTabView extends React.Component {
             case 'campaigns':
                 return <Campaigns/>;
             case 'pizzas':
-                return <Pizzas navigation={this.props.navigation} />;
+                return <Pizzas navigation={this.props.navigation}/>;
             case 'byproducts':
                 return <ByProducts/>;
             case 'favourites':
@@ -61,8 +61,8 @@ class TopTabView extends React.Component {
             tabStyle={{width: 'auto'}}
             style={{backgroundColor: 'black'}}
             onTabLongPress={(scene) => {
-                const { route } = scene
-                props.jumpTo(route.key)
+                const {route} = scene;
+                props.jumpTo(route.key);
             }}
         />;
 

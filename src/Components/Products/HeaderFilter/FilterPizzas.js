@@ -57,7 +57,7 @@ class PizzasFilter extends React.Component {
     }
 
     getData = (categoryId, sizeId) => {
-        console.log(categoryId+"  "+sizeId)
+        console.log(categoryId + '  ' + sizeId);
         this.props.changeDataDelete();
         httpClient
             .post('/web/Product/GetProducts', {
@@ -131,7 +131,7 @@ const mapDispatchToProps = dispatch => {
             dispatch({type: 'FILTER_PIZZAS', payload: id})
         ),
         changeData: (data, sizeId) => (
-            dispatch({type: 'FILTER_PIZZAS_DATA', payload: data, pizzaSize:sizeId})
+            dispatch({type: 'FILTER_PIZZAS_DATA', payload: data, pizzaSize: sizeId})
         ),
         changeDataDelete: () => (
             dispatch({type: 'FILTER_PIZZAS_DATA_DELETE'})

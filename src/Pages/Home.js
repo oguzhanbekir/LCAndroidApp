@@ -14,39 +14,38 @@ import Indicator from '../Components/Indicator';
 import {connect} from 'react-redux';
 
 class Home extends React.Component {
-  render() {
-    return (
-        <Fragment>
-            { this.props.loggedIn ? <MemberDeliveryAddress />  : <LoginButton navigation={this.props.navigation} /> }
-          <ScrollView style={{flex:1}}>
-            <View style={styles.container}>
-              <Banner />
-              <MainPageCampaigns navigation={this.props.navigation} />
-              <CouponCode />
-              <MainPageForYou navigation={this.props.navigation}/>
-              <NearestRestaurantButton navigation={this.props.navigation} />
-            </View>
-          </ScrollView>
-
-        </Fragment>
-    );
-  }
+    render() {
+        return (
+            <Fragment>
+                {this.props.loggedIn ? <MemberDeliveryAddress/> : <LoginButton navigation={this.props.navigation}/>}
+                <ScrollView style={{flex: 1}}>
+                    <View style={styles.container}>
+                        <Banner/>
+                        <MainPageCampaigns navigation={this.props.navigation}/>
+                        <CouponCode/>
+                        <MainPageForYou navigation={this.props.navigation}/>
+                        <NearestRestaurantButton navigation={this.props.navigation}/>
+                    </View>
+                </ScrollView>
+            </Fragment>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F0F0',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#F0F0F0',
+    },
 });
 
 const mapStateToProps = state => {
-  return {
-    loggedIn: state.AuthReducer.loggedIn,
-  };
+    return {
+        loggedIn: state.AuthReducer.loggedIn,
+    };
 };
 
 export default connect(
-  mapStateToProps,
-  null,
+    mapStateToProps,
+    null,
 )(Home);

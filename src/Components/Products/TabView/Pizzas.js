@@ -62,7 +62,7 @@ class Pizzas extends React.Component {
 
             <View style={styles.item}>
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('ProductDetail', { id: item.link } )}
+                    onPress={() => this.props.navigation.navigate('ProductDetail', {id:item.id,link: item.link,})}
                 >
                     <View
                         style={{

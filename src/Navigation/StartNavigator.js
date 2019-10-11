@@ -64,7 +64,7 @@ class StartNavigator extends React.Component {
         }
         if (!this.props.existingId) {
             this.getBasket();
-       }
+        }
     }
 
     getBasket = () => {

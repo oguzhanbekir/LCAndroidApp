@@ -40,31 +40,31 @@ class FilterCampaigns extends React.Component {
                             orderIndex: -1,
                         }].sort(function (a, b) {
                             return parseInt(a.orderIndex) - parseInt(b.orderIndex);
-                        })
+                        }),
                     });
                 }
             });
 
-        })
+        });
     }
 
     selectionOnPressFilter(id) {
         // alert(filterButtonType)
-        this.props.changeFilterId(id)
-        this.getData(id)
+        this.props.changeFilterId(id);
+        this.getData(id);
         this.props.navigation.close();
     }
 
     getData = (updateState) => {
-        this.props.changeDataDelete()
+        this.props.changeDataDelete();
         httpClient
             .post('/web/Product/GetProducts', {
                 CategoryId: updateState,
             })
             .then(res => {
-                this.props.changeData(res.data.result)
-            })
-    }
+                this.props.changeData(res.data.result);
+            });
+    };
 
     FlatListItemSeparator = () => {
         return (
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        filterId: state.FilterCampaignsIdReducer.id
+        filterId: state.FilterCampaignsIdReducer.id,
     };
 };
 

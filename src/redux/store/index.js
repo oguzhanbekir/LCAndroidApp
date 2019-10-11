@@ -16,7 +16,7 @@ const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
     whitelist: [
-        'AuthReducer', 'GetBasketReducer'
+        'AuthReducer', 'GetBasketReducer',
     ],
 };
 

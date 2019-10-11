@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Picker,Text} from 'react-native';
+import {View, StyleSheet, Picker, Text} from 'react-native';
 
 import {httpClient} from '../../HttpClient/HttpClient';
 import {Icon} from 'react-native-elements';
@@ -7,8 +7,9 @@ import {Icon} from 'react-native-elements';
 class MemberDeliveryAddress extends React.Component {
     state = {
         data: [],
-        itemValue:''
+        itemValue: '',
     };
+
     componentDidMount() {
         httpClient.get('/web/Address/GetMemberDeliveryAddress').then(res => {
             this.setState({
@@ -17,7 +18,7 @@ class MemberDeliveryAddress extends React.Component {
         });
     }
 
-    _selectedItem(itemValue){
+    _selectedItem(itemValue) {
         this.setState({itemValue});
     }
 
@@ -30,12 +31,10 @@ class MemberDeliveryAddress extends React.Component {
                         selectedValue={this.state.itemValue}
                         onValueChange={itemValue => this._selectedItem(itemValue)}>
                         {
-                            this.state.data.map( (i)=>{
-                                return <Picker.Item key={i.id} label={i.address.name} value={i.id} />
+                            this.state.data.map((i) => {
+                                return <Picker.Item key={i.id} label={i.address.name} value={i.id}/>;
                             })
                         }
-
-
                     </Picker>
                 )}
             </View>
@@ -44,8 +43,7 @@ class MemberDeliveryAddress extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
 });
 
 export default MemberDeliveryAddress;
