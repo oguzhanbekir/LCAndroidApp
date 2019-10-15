@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import {colors} from '../../config/colors';
-import {Input, Icon} from 'react-native-elements';
+import {Input} from 'react-native-elements';
 
 class CustomInputForm extends React.Component {
     render() {

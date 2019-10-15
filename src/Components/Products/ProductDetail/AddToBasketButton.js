@@ -30,7 +30,17 @@ class AddToBasketButton extends React.Component {
                 IncludeItemPrice: true,
             })
             .then(res => {
-                alert(res.data);
+                alert(res.data)
+                showMessage({
+                    message: 'Ürün Sepete Eklendi, ',
+                    type: 'info',
+                    position: 'bottom',
+                    backgroundColor: 'gray',
+                    icon: 'success',
+                    onPress: () => {
+                        /* THIS FUNC/CB WILL BE CALLED AFTER MESSAGE PRESS */
+                    },
+                });
             });
     }
 

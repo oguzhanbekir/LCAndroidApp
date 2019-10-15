@@ -24,7 +24,7 @@ class ByProducts extends React.Component {
             })
             .then(res => {
                 this.setState({
-                    data: res.data.result,
+                    data: res.data.result
                 });
             });
     }
@@ -68,7 +68,9 @@ class ByProducts extends React.Component {
                 <SafeAreaView style={styles.container}>
                     {this.state.data.length > 0 ?
                         <FlatList
-                            data={this.state.data}
+                            data={this.state.data.sort(function (a, b) {
+                                return parseInt(a.sort) - parseInt(b.sort);
+                            })}
                             renderItem={this._renderItem}
                             keyExtractor={item => item.id}
                             ItemSeparatorComponent={this.FlatListItemSeparator}

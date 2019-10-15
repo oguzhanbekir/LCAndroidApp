@@ -7,19 +7,31 @@ import AddToBasketButton from '../Components/Products/ProductDetail/AddToBasketB
 import {httpClient} from '../HttpClient/HttpClient';
 import {connect} from 'react-redux';
 import Indicator from '../../src/Components/Indicator';
+import CampaingsProductInfo from '../Components/Products/ProductDetail/CampaingsProductInfo';
+import PizzaSelection from '../Components/Products/ProductDetail/PizzaSelection';
+import BottomSheet from 'reanimated-bottom-sheet'
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 class ProductDetail extends React.Component {
+
     state = {
-        productDetail: [],
-    };
+            productDetail: [],
+        };
+
+
 
     componentDidMount() {
 
         const url = (this.props.navigation.state.params.link).split('/');
-        this.getData(url[3], url[4]);
+        const productType = (this.props.navigation.state.params.productType);
+        if (productType === 'Kampanyalar') {
+            this.getDataCampaigns(url[3]);
+        } else {
+            this.getDataPizza(url[3], url[4]);
+        }
     }
 
-    getData = (size, name) => {
+    getDataPizza = (size, name) => {
         httpClient
             .get('/web/Product/GetProductDetails?Name=' + name + '&Size=' + size + '&existingOrderId=' + this.props.existingOrderId)
             .then(res => {
@@ -30,17 +42,47 @@ class ProductDetail extends React.Component {
                     productDetail: res.data.result,
                 });
             });
+
     };
 
-    render() {
+    getDataCampaigns = (name) => {
+        httpClient
+            .get('/web/Product/GetProductDetails?Name=' + name + '&existingOrderId=' + this.props.existingOrderId)
+            .then(res => {
+                this.props.productDetailDelete();
+                this.props.productDetailData(res.data.result);
 
+                this.setState({
+                    productDetail: res.data.result,
+                });
+            });
+    };
+
+
+    render() {
         return (
             <View style={styles.container}>
                 {this.state.productDetail != '' ?
                     <Fragment>
                         <ScrollView>
-                            <ProductInfo navigation={this.props.navigation}/>
-                            <DoughSelection/>
+
+                            {this.state.productDetail.productType === 'Kampanyalar' ?
+                                <Fragment>
+
+                                    <CampaingsProductInfo navigation={this.props.navigation}/>
+                                    {this.state.productDetail.options.map(function (data, index) {
+                                            return <View style={{flex:1}} key={data.id}><PizzaSelection data={data} id={data.id}
+                                                                                       name={data.name}/></View>;
+                                        },
+                                    )}
+                                </Fragment>
+                                :
+                                <Fragment>
+                                    <ProductInfo navigation={this.props.navigation}/>
+                                    <DoughSelection/>
+                                </Fragment>
+                            }
+
                         </ScrollView>
                         <AddToBasketButton/>
                     </Fragment> : <Indicator/>}

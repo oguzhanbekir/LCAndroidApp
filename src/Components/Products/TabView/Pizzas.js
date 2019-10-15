@@ -62,7 +62,7 @@ class Pizzas extends React.Component {
 
             <View style={styles.item}>
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('ProductDetail', {id:item.id,link: item.link,})}
+                    onPress={() => this.props.navigation.navigate('ProductDetail', {id:item.id,link: item.link,productType:item.productType,loggedIn:this.props.loggedIn})}
                 >
                     <View
                         style={{
@@ -244,6 +244,7 @@ const mapStateToProps = state => {
     return {
         filterId: state.FilterPizzasIdReducer.id,
         data: state.FilterPizzasDataReducer.data,
+        loggedIn: state.AuthReducer.loggedIn,
     };
 
 };

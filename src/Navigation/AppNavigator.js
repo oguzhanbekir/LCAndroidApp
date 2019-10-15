@@ -130,12 +130,13 @@ const ProductsTab = createStackNavigator(
                     headerTitle: null,
                     headerRight: (
                         <TouchableOpacity
+                            disabled={!navigation.state.params.loggedIn}
                             onPress={() => navigation.state.params.heart ? deleteFavoriteProduct(navigation) : addFavoriteProduct(navigation)}
                             style={{marginRight: 20}}>
-                            <Icon size={25} name={navigation.state.params.heart ? 'heart' : 'heart-outlined'}
-                                  type="entypo" color={navigation.state.params.heart ? 'red' : 'black'}/>
+                            {navigation.state.params.loggedIn ?
+                                <Icon size={25} name={navigation.state.params.heart ? 'heart' : 'heart-outlined'}
+                                      type="entypo" color={navigation.state.params.heart ? 'red' : 'black'}/> : null}
                         </TouchableOpacity>
-
                     ),
                 };
             },

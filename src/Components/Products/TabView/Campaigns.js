@@ -5,7 +5,7 @@ import {
     StyleSheet,
     FlatList,
     SafeAreaView,
-    Image,
+    Image, TouchableOpacity,
 } from 'react-native';
 
 import {httpClient} from '../../../HttpClient/HttpClient';
@@ -37,24 +37,28 @@ class Campaigns extends React.Component {
     _renderItem = ({item}) => {
         return (
             <View style={styles.item}>
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}>
-                    <Image
-                        style={{height: 70, width: 120}}
-                        source={{uri: item.image}}
-                    />
-                    <View style={{paddingLeft: 10, width: 230}}>
-                        <Text style={styles.titleName}>{item.name}</Text>
-                        <Text style={styles.titlePrice}>
-                            {'₺' + item.price.price.toFixed(2)}
-                        </Text>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('ProductDetail', {id: item.id, link: item.link,productType:item.productType,loggedIn:this.props.loggedIn})}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}>
+                        <Image
+                            style={{height: 70, width: 120}}
+                            source={{uri: item.image}}
+                        />
+                        <View style={{paddingLeft: 10, width: 230}}>
+                            <Text style={styles.titleName}>{item.name}</Text>
+                            <Text style={styles.titlePrice}>
+                                {'₺' + item.price.price.toFixed(2)}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                <Text style={styles.titleDetail}>{item.detail}</Text>
+                    <Text style={styles.titleDetail}>{item.detail}</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -105,6 +109,7 @@ const mapStateToProps = state => {
     return {
         filterId: state.FilterCampaignsIdReducer.id,
         data: state.FilterCampaignsDataReducer,
+        loggedIn: state.AuthReducer.loggedIn,
     };
 };
 

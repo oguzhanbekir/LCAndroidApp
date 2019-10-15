@@ -40,7 +40,7 @@ class TopTabView extends React.Component {
     _renderTabView = ({route}) => {
         switch (route.key) {
             case 'campaigns':
-                return <Campaigns/>;
+                return <Campaigns navigation={this.props.navigation}/>;
             case 'pizzas':
                 return <Pizzas navigation={this.props.navigation}/>;
             case 'byproducts':
