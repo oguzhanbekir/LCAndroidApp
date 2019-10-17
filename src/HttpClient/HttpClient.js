@@ -12,7 +12,6 @@ axios.interceptors.request.use(
             const AUTH_TOKEN = await AsyncStorage.getItem('token');
             if (AUTH_TOKEN != null) {
                 config.headers = {Authorization: 'Bearer ' + AUTH_TOKEN};
-
             }
             config.url = join(
                 'http://api.littlecaesars.uat.web.clckwrk.im/api',

@@ -19,8 +19,7 @@ class DoughSelection extends React.Component {
 
     selectionOnPressRadio(buttonType) {
         this.setState({selectedRadioButton: buttonType});
-        this.props.doughSelection(buttonType);
-
+       // this.props.doughSelection(buttonType);
     }
 
     render() {
@@ -186,7 +185,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
-        productDetail: state.ProductDetailDataReducer.data,
+        productDetail: state.ProductDetailDataReducer.campaignDetailData,
+
+       // productCampaignDetail: state.ProductDetailDataReducer.campaignData,
     };
 };
 

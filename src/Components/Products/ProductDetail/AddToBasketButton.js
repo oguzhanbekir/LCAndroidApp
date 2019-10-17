@@ -76,8 +76,6 @@ class AddToBasketButton extends React.Component {
                     icon: 'info',
                 });
         }
-
-
     }
 
     render() {

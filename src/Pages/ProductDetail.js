@@ -9,19 +9,20 @@ import {connect} from 'react-redux';
 import Indicator from '../../src/Components/Indicator';
 import CampaingsProductInfo from '../Components/Products/ProductDetail/CampaingsProductInfo';
 import PizzaSelection from '../Components/Products/ProductDetail/PizzaSelection';
-import BottomSheet from 'reanimated-bottom-sheet'
-import RBSheet from 'react-native-raw-bottom-sheet';
+import {showMessage} from 'react-native-flash-message';
+
 
 class ProductDetail extends React.Component {
-
-    state = {
+    constructor(props) {
+        super(props);
+        this.state = {
             productDetail: [],
         };
-
+        this.selectionPizza = this.selectionPizza.bind(this);
+    }
 
 
     componentDidMount() {
-
         const url = (this.props.navigation.state.params.link).split('/');
         const productType = (this.props.navigation.state.params.productType);
         if (productType === 'Kampanyalar') {
@@ -55,8 +56,47 @@ class ProductDetail extends React.Component {
                 this.setState({
                     productDetail: res.data.result,
                 });
+
             });
     };
+
+    selectionPizza(productId, optionId, parentId, existingOrderId) {
+
+        httpClient
+            .get('/web/Product/GetProductDetails?ProductId=' + productId + '&OptionId=' + optionId + '&ParentId=' + parentId + '&existingOrderId=' + existingOrderId)
+            .then(res => {
+                this.setState(prevState => ({
+                    productDetail: {
+                        ...prevState.productDetail,
+                        options:
+                            prevState.productDetail.options.map(
+                                data => data.id === optionId ? {
+                                    ...data,
+                                    items: data.items.map(
+                                        data => data.id === productId ? {
+                                            ...data,
+                                            options: res.data.result.options,
+                                            quantity:1,
+                                        } : {...data, options: null,quantity:0},
+                                    ),
+                                } : {...data},
+                            ),
+                    },
+                }), () => {
+                    httpClient
+                    .post('/web/Product/CalculatePrice', {
+                        BasketItem: this.state.productDetail,
+                        IncludeItemPrice: true,
+                    })
+                    .then(res => {
+                      //  alert(res.data)
+                    });
+                    console.log(this.state.productDetail);
+                    this.props.productDetailData(this.state.productDetail);
+                    this.props.productCampaignDetailData(res.data.result);
+                });
+            });
+    }
 
 
     render() {
@@ -65,15 +105,17 @@ class ProductDetail extends React.Component {
                 {this.state.productDetail != '' ?
                     <Fragment>
                         <ScrollView>
-
                             {this.state.productDetail.productType === 'Kampanyalar' ?
-                                <Fragment>
 
+                                <Fragment>
                                     <CampaingsProductInfo navigation={this.props.navigation}/>
-                                    {this.state.productDetail.options.map(function (data, index) {
-                                            return <View style={{flex:1}} key={data.id}><PizzaSelection data={data} id={data.id}
-                                                                                       name={data.name}/></View>;
-                                        },
+                                    {this.props.productDetail.options.map((data) => (
+                                            <View style={{flex: 1}} key={data.id}><PizzaSelection
+                                                selectionPizza={this.selectionPizza}
+                                                data={data}
+                                                id={data.id}
+                                                name={data.name}/></View>
+                                        ),
                                     )}
                                 </Fragment>
                                 :
@@ -110,6 +152,7 @@ const mapDispatchToProps = dispatch => {
     return {
         productDetailData: (data) => dispatch({type: 'PRODUCT_DETAIL_DATA', payload: data}),
         productDetailDelete: () => dispatch({type: 'PRODUCT_DETAIL_DATA_DELETE'}),
+        productCampaignDetailData: (data) => dispatch({type: 'PRODUCT_CAMPAIGN_DATA', payload: data}),
     };
 };
 
