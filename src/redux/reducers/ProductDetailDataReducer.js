@@ -3,7 +3,7 @@ const ProductDetailDataReducer = (state = {
     campaignDetailData: [],
     totalIngredient: 0,
     counterPizza: 1,
-    doughSelection: '',
+    doughSelection: 0,
 }, action) => {
     switch (action.type) {
         case 'PRODUCT_DETAIL_DATA':
@@ -26,7 +26,9 @@ const ProductDetailDataReducer = (state = {
         case 'PRODUCT_DETAIL_DATA_DOUGH_SELECTION':
             return {
                 ...state,
+                id: action.id,
                 doughSelection: action.payload,
+                price: action.price,
             };
         case 'PRODUCT_DETAIL_DATA_DELETE':
             return {

@@ -8,7 +8,7 @@ import {httpClient} from '../HttpClient/HttpClient';
 import {connect} from 'react-redux';
 import Indicator from '../../src/Components/Indicator';
 import CampaingsProductInfo from '../Components/Products/ProductDetail/CampaingsProductInfo';
-import PizzaSelection from '../Components/Products/ProductDetail/PizzaSelection';
+import PizzaSelection2 from '../Components/Products/ProductDetail/PizzaSelection2';
 import {showMessage} from 'react-native-flash-message';
 
 
@@ -17,8 +17,8 @@ class ProductDetail extends React.Component {
         super(props);
         this.state = {
             productDetail: [],
+            productDetailOptions: [],
         };
-        this.selectionPizza = this.selectionPizza.bind(this);
     }
 
 
@@ -60,44 +60,6 @@ class ProductDetail extends React.Component {
             });
     };
 
-    selectionPizza(productId, optionId, parentId, existingOrderId) {
-
-        httpClient
-            .get('/web/Product/GetProductDetails?ProductId=' + productId + '&OptionId=' + optionId + '&ParentId=' + parentId + '&existingOrderId=' + existingOrderId)
-            .then(res => {
-                this.setState(prevState => ({
-                    productDetail: {
-                        ...prevState.productDetail,
-                        options:
-                            prevState.productDetail.options.map(
-                                data => data.id === optionId ? {
-                                    ...data,
-                                    items: data.items.map(
-                                        data => data.id === productId ? {
-                                            ...data,
-                                            options: res.data.result.options,
-                                            quantity:1,
-                                        } : {...data, options: null,quantity:0},
-                                    ),
-                                } : {...data},
-                            ),
-                    },
-                }), () => {
-                    httpClient
-                    .post('/web/Product/CalculatePrice', {
-                        BasketItem: this.state.productDetail,
-                        IncludeItemPrice: true,
-                    })
-                    .then(res => {
-                      //  alert(res.data)
-                    });
-                    console.log(this.state.productDetail);
-                    this.props.productDetailData(this.state.productDetail);
-                    this.props.productCampaignDetailData(res.data.result);
-                });
-            });
-    }
-
 
     render() {
         return (
@@ -110,8 +72,8 @@ class ProductDetail extends React.Component {
                                 <Fragment>
                                     <CampaingsProductInfo navigation={this.props.navigation}/>
                                     {this.props.productDetail.options.map((data) => (
-                                            <View style={{flex: 1}} key={data.id}><PizzaSelection
-                                                selectionPizza={this.selectionPizza}
+                                            <View style={{flex: 1}} key={data.id}><PizzaSelection2
+                                                productDetail2 = {this.state.productDetail}
                                                 data={data}
                                                 id={data.id}
                                                 name={data.name}/></View>
@@ -121,10 +83,9 @@ class ProductDetail extends React.Component {
                                 :
                                 <Fragment>
                                     <ProductInfo navigation={this.props.navigation}/>
-                                    <DoughSelection/>
+                                    <DoughSelection productDetail={this.state.productDetail}/>
                                 </Fragment>
                             }
-
                         </ScrollView>
                         <AddToBasketButton/>
                     </Fragment> : <Indicator/>}
@@ -144,7 +105,7 @@ const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
         productDetail: state.ProductDetailDataReducer.data,
-
+        productCampaignDetail: state.ProductDetailDataReducer.campaignDetailData,
     };
 };
 

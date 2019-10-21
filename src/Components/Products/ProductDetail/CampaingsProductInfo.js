@@ -4,8 +4,10 @@ import {connect} from 'react-redux';
 
 class CampaingsProductInfo extends React.Component {
     render() {
+
         return (
             <Fragment>
+                <Text>{this.props.productDetail.name}</Text>
                 <Image source={{uri: this.props.productDetail.image}}
                        style={{height: 250}}
                 />
@@ -15,7 +17,7 @@ class CampaingsProductInfo extends React.Component {
                             <Text numberOfLines={1} style={styles.titleName}>{this.props.productDetail.name}</Text>
                         </View>
                         <Text
-                            style={styles.titlePrice}>{'₺' + ((this.props.productDetail.price.price + this.props.totalIngredient + (this.props.doughSelection === 'Parmesan' || this.props.doughSelection === 'Nefis' ? this.props.productDetail.options[0].items.find(data => data.name === 'Parmesan Kenar').price.price : 0)) * this.props.counterPizza).toFixed(2)}</Text>
+                            style={styles.titlePrice}>{'₺' + ((this.props.productDetail.price.price + this.props.totalIngredient + this.props.doughSelection) * this.props.counterPizza).toFixed(2)}</Text>
                     </View>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                         <Text style={styles.titleDetail}>{this.props.productDetail.detail}</Text>

@@ -7,14 +7,12 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {connect} from 'react-redux';
 import {httpClient} from '../../../HttpClient/HttpClient';
 import DoughSelection from './DoughSelection';
-class PizzaSelection extends React.Component {
+class PizzaSelection2 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            productDetail: this.props.productDetail2,
-            itemDetail: [],
-            productCampaignDetail: [],
-         //   productDetailOptions : this.props.productDetailOptions.length != '' && this.props.productDetailOptions ,
+            itemDetail:[],
+            productDetail:this.props.productDetail2,
         };
     }
 
@@ -53,7 +51,6 @@ class PizzaSelection extends React.Component {
     };
 
     selectionPizza(productDetail) {
-      //  console.log(productDetail);
         httpClient
             .get('/web/Product/GetProductDetails?ProductId=' + productDetail.id + '&OptionId=' + this.props.id + '&ParentId=' + this.props.productDetail.id + '&existingOrderId=' + this.props.existingOrderId)
             .then(res => {
@@ -74,59 +71,26 @@ class PizzaSelection extends React.Component {
                                 } : {...data},
                             ),
                     },
+                }
+                ), () => {
 
-                    productCampaignDetail: res.data.result,
-                }), () => {
-                    httpClient
-                        .post('/web/Product/CalculatePrice', {
-                            BasketItem: this.state.productDetail,
-                            IncludeItemPrice: true,
-                        })
-                        .then(res => {
-                            //  alert(res.data)
-                        });
-                    // console.log(res.data.result)
-                   // console.log(this.state.productDetail.options.find(data => data.id === this.props.id).items.find(data => data.id === productDetail.id))
                     this.setState({
                         itemDetail: this.state.productDetail.options.find(data => data.id === this.props.id).items.find(data => data.id === productDetail.id)
-                    }, () => {
-                        console.log(this.state.productDetail.options.find(data => data.id === this.props.id));
-                     //   console.log(this.state.itemDetail)
                     });
-
-                    // this.props.productCampaignDetailData(res.data.result);
-                   // console.log(this.state.productCampaignDetail)
-                    this.props.productDetailData(this.state.productDetail);
-
+                    this.props.productDetailData(this.state.productDetail)
                 });
+
             });
-
-      //  {this.props.productDetailOptions.length != '' && console.log(this.props.productDetailOptions)}
-       // this.props.selectionPizza(productDetail.id, this.props.id, this.props.productDetail.id, this.props.existingOrderId);
-        /*this.setState({
-            itemDetail: productDetail,
-            productCampaignDetail:this.props.productCampaignDetail
-        }, () => {
-
-            //console.log(this.props.productDetailOptions)
-        });*/
-       // console.log(this.props.productCampaignData)
-      //  console.log(this.props.productDetailOptions)
-
-
-       this.props.productDetailData(productDetail)
         this.RBSheet.close()
+
     }
 
     render() {
-
-
         const {
             name,
             data,
         } = this.props;
         return (
-
             <View style={{flex: 1}}>
                 <RBSheet
                     ref={ref => {
@@ -144,13 +108,13 @@ class PizzaSelection extends React.Component {
                     <Fragment>
                         <Text style={styles.title}>{data.name}</Text>
                         <FlatList
-                            data={this.state.productDetail.options.find(data => data.id === this.props.id).items.sort(function (a, b) {
+                            data={data.items.sort(function (a, b) {
                                 return parseInt(a.price.price) - parseInt(b.price.price);
                             })}
                             renderItem={this._renderItem}
                             keyExtractor={data => data.id}
                             ItemSeparatorComponent={this.FlatListItemSeparator}
-                            extraData={this.state.productDetail}
+                            extraData={data}
                         />
                     </Fragment>
                 </RBSheet>
@@ -211,20 +175,19 @@ class PizzaSelection extends React.Component {
                                 </TouchableOpacity>
                             </View>
                         </TouchableOpacity>
-                        <DoughSelection productDetail={this.state.itemDetail}  />
+                        <DoughSelection productDetail={this.state.itemDetail} />
                     </View>}
             </View>
         );
     }
 }
 
-PizzaSelection.propTypes = {
+PizzaSelection2.propTypes = {
     name: PropTypes.string,
     id: PropTypes.string,
     data: PropTypes.object,
 };
 
-PizzaSelection.defaultProps = {};
 
 const styles = StyleSheet.create({
     container: {
@@ -279,11 +242,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        productDetailData: (data) => dispatch({type: 'PRODUCT_CAMPAIGN_DATA', payload: data}),
+        productDetailData: (data) => dispatch({type: 'PRODUCT_DETAIL_DATA', payload: data}),
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(PizzaSelection);
+)(PizzaSelection2);

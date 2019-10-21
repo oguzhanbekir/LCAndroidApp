@@ -2,6 +2,7 @@ import React, {Fragment} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {Icon} from 'react-native-elements';
+import PropTypes from 'prop-types';
 
 class DoughSelection extends React.Component {
     state = {
@@ -18,8 +19,9 @@ class DoughSelection extends React.Component {
     }
 
     selectionOnPressRadio(buttonType) {
+        alert(buttonType)
         this.setState({selectedRadioButton: buttonType});
-       // this.props.doughSelection(buttonType);
+       this.props.doughSelection(this.props.productDetail.id,buttonType,this.props.productDetail.options[0].items.find(data => data.name === buttonType+' Kenar').price.price);
     }
 
     render() {
@@ -101,7 +103,7 @@ class DoughSelection extends React.Component {
                                     ? styles.buttonDoughSelectedText
                                     : styles.buttonDoughSelectText
                             }>
-                            {' Nefis Kenar Ekle [+ ₺'+parmesanPrice.price.price.toFixed(2)+']'}
+                            {' Parmesan Kenar Ekle [+ ₺'+parmesanPrice.price.price.toFixed(2)+']'}
                         </Text>
                     </TouchableOpacity>
                 </Fragment>
@@ -135,6 +137,10 @@ class DoughSelection extends React.Component {
         );
     }
 }
+
+DoughSelection.propTypes = {
+    productDetail: PropTypes.object,
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -185,15 +191,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         existingOrderId: state.GetBasketReducer.id,
-        productDetail: state.ProductDetailDataReducer.campaignDetailData,
-
+       // productDetail: state.ProductDetailDataReducer.campaignDetailData,
        // productCampaignDetail: state.ProductDetailDataReducer.campaignData,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        doughSelection: (data) => dispatch({type: 'PRODUCT_DETAIL_DATA_DOUGH_SELECTION', payload: data}),
+        doughSelection: (id,data,price) => dispatch({type: 'PRODUCT_DETAIL_DATA_DOUGH_SELECTION', id:id,payload: data,price:price}),
     };
 };
 
